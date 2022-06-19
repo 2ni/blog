@@ -1,8 +1,8 @@
-<h1>{{ __ "blog articles" }}</h1>
+<h1>{{ __ "drafts" }}</h1>
 <ul>
   {{#each articles}}
   <li>
-    <h4><a href="/articles/{{ this.slug }}"">{{ this.title }}</a></h4>
+    <h4><a href="/articles/edit/{{ this._id }}"">{{ this.title }}</a></h4>
     <div class="subtitle">{{formatDate this.createdAt}}</div>
     <div class="description">{{ this.description }}</div>
 

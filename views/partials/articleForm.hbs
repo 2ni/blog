@@ -3,6 +3,24 @@
   <input required type="text" value="{{ article.title }}" name="title" id="title"></input>
 </div>
 <div>
+  <label for="status">{{ __ "status" }}</label>
+  <select name="status" id="status">
+    {{# select article.status }}
+    <option value="draft">{{ __ "draft" }}</option>
+    <option value="published">{{ __ "published" }}</option>
+    {{/ select }}
+  </select>
+</div>
+<div>
+  <label for="type">{{ __ "type" }}</label>
+  <select name="type" id="type">
+    {{# select article.type }}
+    <option value="article">{{ __ "article" }}</option>
+    <option value="page">{{ __ "page" }}</option>
+    {{/ select }}
+  </select>
+</div>
+<div>
   <label for="description">{{ __ "description" }}</label>
   <textarea type="text" name="description" id="description">{{ article.description }}</textarea>
 </div>

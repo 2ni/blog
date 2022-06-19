@@ -7,7 +7,18 @@ import { JSDOM } from "jsdom"
 const domPurify = createDomPurify(new JSDOM("").window)
 
 
+// TODO use validateSync() in routes to check
 const articleSchema = new mongoose.Schema({
+  status: {
+    type: String,
+    enum: { values: [ "draft", "published" ], message: "{VALUE} is not supported" },
+    default: "draft",
+  },
+  type: {
+    type: String,
+    enum: { values: [ "article", "page" ], message: "{VALUE} is not supported" },
+    default: "blog",
+  },
   title: {
     type: String,
     required: true,

@@ -76,9 +76,5 @@ app.listen(config.port, (err) => {
 
 app.get("/", async (req, res) => {
   // console.log(res.__("hello"), res.getLocale(), res.getLocales())
-  const articles = await db.articles.find().sort({ createdAt: "desc" }).lean()
-  res.render("articles/index", {
-    title: "Articles",
-    articles: articles,
-  })
+  res.render("index")
 })

@@ -8,5 +8,17 @@
   "cancel": "cancel",
   "edit": "edit",
   "delete": "delete",
-  "edit article": "edit article"
+  "edit article": "edit article",
+  "status": "status",
+  "draft": "draft",
+  "published": "published",
+  "type": "type",
+  "blog": "blog",
+  "page": "page",
+  "home": "home",
+  "drafts": "drafts",
+  "blog articles": "blog articles",
+  "article": "article",
+  "articles": "articles",
+  "pages": "pages"
 }

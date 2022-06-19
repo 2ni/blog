@@ -2,7 +2,21 @@ import express from "express"
 const router = express.Router()
 import db from "../models/app.js"
 
-router.get("/", (req, res, next) => {
+router.get("/", async (req, res) => {
+  // console.log(res.__("hello"), res.getLocale(), res.getLocales())
+  const articles = await db.articles.find({ type: "article", status: "published" }).sort({ createdAt: "desc" }).lean()
+  res.render("articles/index", {
+    title: "Articles",
+    articles: articles,
+  })
+})
+
+router.get("/drafts", async (req, res) => {
+  const articles = await db.articles.find({ status: "draft" }).sort({ createdAt: "desc" }).lean()
+  res.render("articles/drafts", {
+    title: "Articles",
+    articles: articles,
+  })
 })
 
 router.get("/new", (req, res) => {
@@ -38,6 +52,8 @@ router.delete("/:id", async (req, res) => {
 function saveAndRedirect(path) {
   return async (req, res) => {
     let article = req.article
+    article.status = req.body.status
+    article.type = req.body.type
     article.title = req.body.title
     article.description = req.body.description
     article.markdown = req.body.markdown
@@ -46,7 +62,7 @@ function saveAndRedirect(path) {
       article = await article.save()
       res.redirect(`/articles/${article.slug}`)
     } catch (e) {
-      res.render("articles/${path}", { article: article })
+      res.render(`articles/${path}`, { article: article })
     }
   }
 }

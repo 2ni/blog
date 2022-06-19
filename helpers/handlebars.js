@@ -11,7 +11,15 @@ const json = (object) => {
   return JSON.stringify(object)
 }
 
+// https://stackoverflow.com/questions/13046401/how-to-set-selected-select-option-in-handlebars-template
+const select = function (selected, options) {
+  return options.fn(this).replace(
+      new RegExp(' value=\"' + selected + '\"'),
+      '$& selected="selected"');
+}
+
 export {
   formatDate,
   json,
+  select,
 }
