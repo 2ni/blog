@@ -1,4 +1,12 @@
 {
   "hello": "Hello",
-  "new article": "new article"
+  "new article": "new article",
+  "title": "title",
+  "save": "save",
+  "description": "description",
+  "markdown": "markdown",
+  "cancel": "cancel",
+  "edit": "edit",
+  "delete": "delete",
+  "edit article": "edit article"
 }

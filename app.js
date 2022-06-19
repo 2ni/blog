@@ -1,4 +1,5 @@
 import express from "express"
+import bodyParser from "body-parser"
 import helmet from "helmet"
 import compression from "compression"
 import { engine } from "express-handlebars"
@@ -7,17 +8,31 @@ import os from "os"
 import path from "path"
 import { fileURLToPath } from "url"
 import { dirname } from "path"
+import methodOverride from "method-override"
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
-
 
 import  { config } from  "./config/app.js"
 import * as handlebarsHelpers from "./helpers/handlebars.js"
 
 import articleRoutes from "./routes/articles.js"
 
+import db from "./models/app.js"
+process.stdout.write("waiting for DB...")
+try {
+  db.mongoose.connect(config.dbUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+} catch (err) {
+  console.error("\x1B[31;1mfailed\x1B[0m", err)
+}
+
+// db.mongoose.set("debug", { shell: true })
+console.log("\x1B[32;1msuccess\x1B[0m")
 
 const app = express()
+app.use(methodOverride("_method"))
 app.use("/", express.static("public"))
 app.engine(".hbs", engine({ extname: ".hbs", helpers: handlebarsHelpers, partialsDir: "views/partials", defaultLayout: "default" }))
 app.set("view engine", ".hbs")
@@ -43,6 +58,8 @@ app.use((req, res, next) => {
 
 app.use(helmet())
 app.use(compression())
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use("/articles", articleRoutes)
 
@@ -52,28 +69,15 @@ app.listen(config.port, (err) => {
     return console.log("something bad happened", err)
   }
 
-  console.log(`server is listening on http://${os.hostname()}:${config.port}`)
+  const now = handlebarsHelpers.formatDate(new Date(), { showTime: true })
+  console.log(`${now} server is listening on http://${os.hostname()}:${config.port}`)
 })
 
 
-app.get("/", (req, res) => {
-  console.log(res.__("hello"), res.getLocale(), res.getLocales())
-  const articles = [{
-    id: "5678",
-    title: "Test article 1",
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
-    description: "Test description 1",
-
-  },
-  {
-    id: "1234",
-    title: "Test article 2",
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
-    description: "Test description 2",
-  }]
-  res.render("index", {
+app.get("/", async (req, res) => {
+  // console.log(res.__("hello"), res.getLocale(), res.getLocales())
+  const articles = await db.articles.find().sort({ createdAt: "desc" }).lean()
+  res.render("articles/index", {
     title: "Articles",
     articles: articles,
   })

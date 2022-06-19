@@ -1,6 +1,6 @@
 const envConfig = {
   port: 3001,
-  dbUrl: "mongodb://localhost:27017/2ni_ch",
+  dbUrl: "mongodb://127.0.0.1:27017/blog",
 }
 
 export default envConfig;
