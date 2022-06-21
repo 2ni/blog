@@ -2,15 +2,6 @@ import express from "express"
 const router = express.Router()
 import db from "../models/app.js"
 
-router.get("/", async (req, res) => {
-  // console.log(res.__("hello"), res.getLocale(), res.getLocales())
-  const pages = await db.pages.find({ status: "published" }).sort({ createdAt: "desc" }).lean()
-  res.render("pages/index", {
-    title: "Pages",
-    pages: pages,
-  })
-})
-
 router.get("/drafts", async (req, res) => {
   const pages = await db.pages.find({ status: "draft" }).sort({ createdAt: "desc" }).lean()
   res.render("pages/drafts", {
@@ -26,12 +17,6 @@ router.get("/new", (req, res) => {
 router.get("/edit/:id", async (req, res) => {
   const page = await db.pages.findById(req.params.id).lean()
   res.render("pages/edit", { page: page })
-})
-
-router.get("/:slug", async (req, res) => {
-  const page = await db.pages.findOne({ slug: req.params.slug }).lean()
-  if (page === null) res.redirect("/")
-  res.render("pages/show", { page: page })
 })
 
 router.post("/", async (req, res, next) => {
@@ -54,12 +39,15 @@ function saveAndRedirect(path) {
     let page = req.page
     page.status = req.body.status
     page.title = req.body.title
-    page.markdown = req.body.markdown
+    page.path = req.body.path
+    page.markdown = req.body.markdown.replace(/\n/g, "")
 
     try {
       page = await page.save()
-      res.redirect(`/pages/${page.slug}`)
+      res.redirect(page.url)
     } catch (e) {
+      console.log(e)
+      console.log("path", path)
       res.render(`pages/${path}`, { page: page })
     }
   }

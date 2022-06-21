@@ -65,6 +65,20 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use("/articles", articleRoutes)
 app.use("/pages", pageRoutes)
 
+app.get("/", async (req, res) => {
+  const page = await db.pages.findOne({ url: "/", status: "published" }).lean()
+  if (page === null) {
+    const pages = await db.pages.find({ status: "published" }).lean()
+    res.render("index", { pages: pages })
+  }
+  else res.render("pages/show", { page: page })
+})
+
+app.get("*", async (req, res) => {
+  // console.log(res.__("hello"), res.getLocale(), res.getLocales())
+  const page = await db.pages.findOne({ url: req.params[0], status: "published" }).lean()
+  res.render(page === null ? "404": "pages/show", { page: page })
+})
 
 app.listen(config.port, (err) => {
   if (err) {
@@ -73,10 +87,4 @@ app.listen(config.port, (err) => {
 
   const now = handlebarsHelpers.formatDate(new Date(), { showTime: true })
   console.log(`${now} server is listening on http://${os.hostname()}:${config.port}`)
-})
-
-
-app.get("/", async (req, res) => {
-  // console.log(res.__("hello"), res.getLocale(), res.getLocales())
-  res.render("index")
 })

@@ -1,8 +1,4 @@
 <div>
-  <label for="title">{{ __ "title" }}</label>
-  <input required type="text" value="{{ page.title }}" name="title" id="title"></input>
-</div>
-<div>
   <label for="status">{{ __ "status" }}</label>
   <select name="status" id="status">
     {{# select page.status }}
@@ -10,6 +6,14 @@
     <option value="published">{{ __ "published" }}</option>
     {{/ select }}
   </select>
+</div>
+<div>
+  <label for="path">{{ __ "path" }}</label>
+  <input type="text" value="{{ page.path }}" name="path" id="path"></input>
+</div>
+<div>
+  <label for="title">{{ __ "title" }}</label>
+  <input type="text" value="{{ page.title }}" name="title" id="title"></input>
 </div>
 <div>
   <label for="markdown">{{ __ "markdown" }}</label>

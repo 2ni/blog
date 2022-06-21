@@ -14,32 +14,16 @@ const contentSchema = new mongoose.Schema({
     enum: { values: [ "draft", "published" ], message: "{VALUE} is not supported" },
     default: "draft",
   },
-  title: {
-    type: String,
-    required: true,
-  },
   markdown: {
     type: String,
   },
-  slug: {
-    type: String,
-    required: true,
-    unique: true,
-  },
   sanitizedHtml: {
     type: String,
-    required: true,
   },
 }, { timestamps: true })
 
 contentSchema.pre("validate", function(next) {
-  if (this.title) {
-    this.slug = slugify(this.title, { lower: true, strict: true })
-  }
-
-  if (this.markdown) {
-    this.sanitizedHtml = domPurify.sanitize(marked(this.markdown))
-  }
+  this.sanitizedHtml = domPurify.sanitize(marked(this.markdown))
 
   next()
 })

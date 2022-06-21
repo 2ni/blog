@@ -1,4 +1,9 @@
 <ul>
   <li><a href="/articles">{{ __ "articles" }}</a></li>
-  <li><a href="/pages">{{ __ "pages" }}</a></li>
+</ul>
+<h2>Pages</h2>
+<ul>
+  {{#each pages }}
+  <li><a href="{{ this.url }}">{{ this.title }} ({{ this.url }})</a></li>
+  {{/each }}
 </ul>

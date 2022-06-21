@@ -23,5 +23,8 @@
   "pages": "pages",
   "new page": "new page",
   "article drafts": "article drafts",
-  "page drafts": "page drafts"
+  "page drafts": "page drafts",
+  "edit page": "edit page",
+  "path": "path",
+  "urlpath": "urlpath"
 }

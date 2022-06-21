@@ -55,7 +55,7 @@ function saveAndRedirect(path) {
     article.status = req.body.status
     article.title = req.body.title
     article.description = req.body.description
-    article.markdown = req.body.markdown
+    article.markdown = req.body.markdown.replace(/\n/g, "")
 
     try {
       article = await article.save()
