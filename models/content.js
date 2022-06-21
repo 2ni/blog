@@ -23,6 +23,7 @@ const contentSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 contentSchema.pre("validate", function(next) {
+  marked.setOptions({ headerIds: true })
   this.sanitizedHtml = domPurify.sanitize(marked(this.markdown))
 
   next()
