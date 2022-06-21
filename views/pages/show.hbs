@@ -1,0 +1,9 @@
+<h1>{{ page.title }}</h1>
+<div>{{ formatDate page.createdAt }}</div>
+<div>{{{ page.sanitizedHtml }}}</div>
+<div class="edit">
+  <a href="/pages/edit/{{ page._id }}">{{__ "edit"}}</a>
+  <form action="/pages/{{ page._id }}?_method=delete" method="POST">
+    <button type="submit">{{ __ "delete" }}</button>
+  <form>
+</div>

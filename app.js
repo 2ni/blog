@@ -16,6 +16,7 @@ import  { config } from  "./config/app.js"
 import * as handlebarsHelpers from "./helpers/handlebars.js"
 
 import articleRoutes from "./routes/articles.js"
+import pageRoutes from "./routes/pages.js"
 
 import db from "./models/app.js"
 process.stdout.write("waiting for DB...")
@@ -62,6 +63,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use("/articles", articleRoutes)
+app.use("/pages", pageRoutes)
 
 
 app.listen(config.port, (err) => {

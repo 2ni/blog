@@ -1,0 +1,9 @@
+<h1>{{ __ "pages" }}</h1>
+<ul>
+  {{#each pages}}
+  <li>
+    <h4><a href="/pagess/{{ this.slug }}">{{ this.title }}</a></h4>
+    <div class="subtitle">{{formatDate this.createdAt}}</div>
+  </li>
+  {{/each}}
+</ul>

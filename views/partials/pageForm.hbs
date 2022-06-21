@@ -1,23 +1,19 @@
 <div>
   <label for="title">{{ __ "title" }}</label>
-  <input required type="text" value="{{ article.title }}" name="title" id="title"></input>
+  <input required type="text" value="{{ page.title }}" name="title" id="title"></input>
 </div>
 <div>
   <label for="status">{{ __ "status" }}</label>
   <select name="status" id="status">
-    {{# select article.status }}
+    {{# select page.status }}
     <option value="draft">{{ __ "draft" }}</option>
     <option value="published">{{ __ "published" }}</option>
     {{/ select }}
   </select>
 </div>
 <div>
-  <label for="description">{{ __ "description" }}</label>
-  <textarea type="text" name="description" id="description">{{ article.description }}</textarea>
-</div>
-<div>
   <label for="markdown">{{ __ "markdown" }}</label>
-  <textarea type="text" name="markdown" id="markdown">{{ article.markdown }}</textarea>
+  <textarea type="text" name="markdown" id="markdown">{{ page.markdown }}</textarea>
 </div>
 <a href="/">{{ __ "cancel" }}</a>
 <button type="submit">{{ __ "save" }}</button>

@@ -20,5 +20,8 @@
   "blog articles": "blog articles",
   "article": "article",
   "articles": "articles",
-  "pages": "pages"
+  "pages": "pages",
+  "new page": "new page",
+  "article drafts": "article drafts",
+  "page drafts": "page drafts"
 }

@@ -2,7 +2,7 @@
 <ul>
   {{#each articles}}
   <li>
-    <h4><a href="/articles/edit/{{ this._id }}"">{{ this.title }}</a></h4>
+    <h4><a href="/articles/edit/{{ this._id }}">{{ this.title }}</a></h4>
     <div class="subtitle">{{formatDate this.createdAt}}</div>
     <div class="description">{{ this.description }}</div>
 
