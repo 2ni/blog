@@ -29,7 +29,7 @@ const upload = multer({
       cb(null, true)
     } else {
       console.log("mime", file.mimetype)
-      return cb(new Error("filetype not supported"))
+      return cb(new Error(req.__("filetype not supported")))
     }
   },
 }).array("files", 5)
@@ -40,7 +40,7 @@ const upload = multer({
  */
 router.post("/", (req, res) => {
   upload(req, res, (err) => {
-    if (err) return res.status(413).json({ "status": "error", "msg": res.__(err.message) })
+    if (err) return res.status(413).json({ "status": "error", "msg": err.message })
     return res.status(200).json({"status": "ok"})
   })
 })

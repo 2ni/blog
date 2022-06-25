@@ -56,6 +56,7 @@ app.use(i18n.init)
 app.use((req, res, next) => {
   // console.log("ip", req.socket.remoteAddress)
   res.setLocale("de")
+  req.setLocale("de")
   next()
 })
 
