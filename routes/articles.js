@@ -8,6 +8,7 @@ router.get("/", async (req, res) => {
   res.render("articles/index", {
     title: "Articles",
     articles: articles,
+    pagetype: "articleindex",
   })
 })
 
@@ -16,6 +17,7 @@ router.get("/drafts", async (req, res) => {
   res.render("articles/drafts", {
     title: "Articles",
     articles: articles,
+    pagetype: "articleindex",
   })
 })
 
@@ -31,7 +33,7 @@ router.get("/edit/:id", async (req, res) => {
 router.get("/:slug", async (req, res) => {
   const article = await db.articles.findOne({ slug: req.params.slug }).lean()
   if (article === null) res.redirect("/")
-  res.render("articles/show", { article: article })
+  res.render("articles/show", { article: article, pagetype: "articledetail" })
 })
 
 router.post("/", async (req, res, next) => {
@@ -61,6 +63,7 @@ function saveAndRedirect(path) {
       article = await article.save()
       res.redirect(`/articles/${article.slug}`)
     } catch (e) {
+      console.log(e)
       res.render(`articles/${path}`, { article: article })
     }
   }

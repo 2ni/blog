@@ -1,4 +1,5 @@
 import mongoose from "mongoose"
+import slugify from "slugify"
 import contentSchema from "./content.js"
 
 const articleSchema = contentSchema.clone()
@@ -21,6 +22,7 @@ articleSchema.pre("validate", function(next) {
   if (this.title) {
     this.slug = slugify(this.title, { lower: true, strict: true })
   }
+  next()
 })
 
 const articles = mongoose.model("Articles", articleSchema)

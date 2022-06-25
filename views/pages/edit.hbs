@@ -2,3 +2,6 @@
 <form action="/pages/{{ page._id }}?_method=put" method="post">
   {{> pageForm }}
 </form>
+<form action="/pages/{{ page._id }}?_method=delete" method="post">
+  <button type="submit">{{ __ "delete" }}</button>
+<form>

@@ -1,11 +1,13 @@
-<h1>{{ __ "blog articles" }}</h1>
 <ul>
   {{#each articles}}
   <li>
-    <h4><a href="/articles/{{ this.slug }}">{{ this.title }}</a></h4>
-    <div class="subtitle">{{formatDate this.createdAt}}</div>
-    <div class="description">{{ this.description }}</div>
-
+    <a href="/articles/{{ this.slug }}">
+      <header>
+        <h4>{{ this.title }}</h4>
+        <time datetime="{{ formatDate this.createdAt showTime=true }}">{{formatDate this.createdAt}}</time>
+      </header>
+      <div class="description">{{ this.description }}</div>
+    </a>
   </li>
   {{/each}}
 </ul>

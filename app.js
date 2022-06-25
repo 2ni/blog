@@ -17,6 +17,7 @@ import * as handlebarsHelpers from "./helpers/handlebars.js"
 
 import articleRoutes from "./routes/articles.js"
 import pageRoutes from "./routes/pages.js"
+import uploadRoutes from "./routes/uploads.js"
 
 import db from "./models/app.js"
 process.stdout.write("waiting for DB...")
@@ -53,6 +54,7 @@ app.use(i18n.init)
 // middleware to set language depending on url
 // https://stackoverflow.com/questions/19539332/localization-nodejs-i18n
 app.use((req, res, next) => {
+  // console.log("ip", req.socket.remoteAddress)
   res.setLocale("de")
   next()
 })
@@ -64,6 +66,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use("/articles", articleRoutes)
 app.use("/pages", pageRoutes)
+app.use("/uploads", uploadRoutes)
 
 app.get("/", async (req, res) => {
   const page = await db.pages.findOne({ url: "/", status: "published" }).lean()
@@ -71,13 +74,13 @@ app.get("/", async (req, res) => {
     const pages = await db.pages.find({ status: "published" }).lean()
     res.render("index", { pages: pages })
   }
-  else res.render("pages/show", { page: page })
+  else res.render("pages/show", { page: page, pagetype: "pagedetail" })
 })
 
 app.get("*", async (req, res) => {
   // console.log(res.__("hello"), res.getLocale(), res.getLocales())
   const page = await db.pages.findOne({ url: req.params[0], status: "published" }).lean()
-  res.render(page === null ? "404": "pages/show", { page: page })
+  res.render(page === null ? "404": "pages/show", { page: page, pagetype: "pagedetail" })
 })
 
 app.listen(config.port, (err) => {

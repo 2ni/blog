@@ -5,17 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>{{title}}</title>
+  <link href="/css/fonts/fonts.css" rel="stylesheet">
   <link href="/css/default.css" rel="stylesheet">
 </head>
 <body>
-  <ul>
-    <li><a href="/">{{ __ "home" }}</a></li>
-    <li><a href="/articles/drafts">{{ __ "article drafts" }}</a></li>
-    <li><a href="/pages/drafts">{{ __ "page drafts" }}</a></li>
-    <li><a href="/articles/new">{{ __ "new article" }}</a></li>
-    <li><a href="/pages/new">{{ __ "new page" }}</a></li>
-  </ul>
-  <div class="container">
+  <nav>
+    <ul>
+      <li><a href="/">{{ __ "home" }}</a></li>
+      <li><a href="/articles">{{ __ "blog" }}</a></li>
+      <li class="search">
+        <form id="search">
+          <input type="search" name="searchstr" placeholder="{{ __ "searchstr" }}">
+          <button type="submit">{{ __ "search" }}</button>
+        </form>
+      </li>
+    </ul>
+    <ul class="admin">
+      <li><a href="/articles/drafts">{{ __ "article drafts" }}</a></li>
+      <li><a href="/articles/new">{{ __ "new article" }}</a></li>
+      <li><a href="/pages/drafts">{{ __ "page drafts" }}</a></li>
+      <li><a href="/pages/new">{{ __ "new page" }}</a></li>
+      {{# if article }}<li><a href="/articles/edit/{{ article._id }}">{{__ "edit"}}</a></li>{{/if }}
+      {{# if page }}<li><a href="/pages/edit/{{ page._id }}">{{__ "edit"}}</a></li>{{/if }}
+    </ul>
+  </nav>
+  <div class="container {{pagetype}}">
     {{{body}}}
   </div>
 </body>

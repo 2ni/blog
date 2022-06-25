@@ -17,7 +17,6 @@
   "page": "page",
   "home": "home",
   "drafts": "drafts",
-  "blog articles": "blog articles",
   "article": "article",
   "articles": "articles",
   "pages": "pages",
@@ -26,5 +25,10 @@
   "page drafts": "page drafts",
   "edit page": "edit page",
   "path": "path",
-  "urlpath": "urlpath"
+  "urlpath": "urlpath",
+  "filetype not supported": "filetype not supported",
+  "ENOENT: no such file or directory, open 'public/uploads/2ni-southpark-avatar-1655902271490-5401.jpg'": "ENOENT: no such file or directory, open 'public/uploads/2ni-southpark-avatar-1655902271490-5401.jpg'",
+  "searchstr": "searchstr",
+  "search": "search",
+  "url": "url"
 }

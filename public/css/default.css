@@ -1,0 +1,130 @@
+/*
+ * colors
+ * https://color.adobe.com/create/color-wheel/
+ * https://coolors.co/contrast-checker/333178-b3c8dd
+ * https://www.canva.com/colors/color-wheel/
+ * https://colour-palette-generator.azurewebsites.net/
+ * https://www.rapidtables.com/web/color/color-scheme.html
+ */
+body {
+  margin: 0;
+  font-family: FiraCode;
+}
+
+/******************************* */
+/* navigation                    */
+/******************************* */
+nav ul {
+  background: #b3c8dd;
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0 .5rem;
+  justify-content: space-between;
+}
+
+nav a {
+  display: block;
+  padding: .5rem;
+  color: #000;
+  text-decoration: underline;
+}
+
+nav a:hover {
+  background: #9FB2C4;
+}
+
+nav li.search {
+  margin-left: auto;
+  margin-right: .5rem;
+}
+
+nav li.search input {
+  width: 20rem;
+}
+
+nav ul.admin {
+  background: #D7DE9E;
+  justify-content: unset;
+  font-size: .8rem;
+}
+
+nav ul.admin a {
+  color: #000;
+  padding: .2rem;
+}
+
+nav ul.admin a:hover {
+  background: #BEC48B;
+}
+
+nav ul li:first-child a {
+  padding-left: 0;
+}
+
+/******************************* */
+/* container                     */
+/******************************* */
+.container {
+  margin: 0 .5rem;
+}
+
+/******************************* */
+/* article, page                 */
+/******************************* */
+.container.articledetail header h1,
+.container.pagedetail header h1 {
+  margin-bottom: 0;
+}
+
+.container.articledetail header time,
+.container.articleindex header time,
+.container.pagedetail header time {
+  font-size: .8rem;
+  color: #4C555E;
+}
+
+.container.articleindex h4 {
+  margin: 0;
+}
+
+.container.articleindex ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.container.articleindex li {
+  background: #DECEB4;
+  margin-right: .5rem;
+  margin-bottom: .5rem;
+  width: 20rem;
+  height: 10rem;
+}
+
+.container.articleindex li a {
+  text-decoration: none;
+  padding: .5rem;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  color: #000;
+}
+
+.container.articleindex li a:hover {
+  border: 1px solid black;
+}
+
+.container.articleindex li header {
+  margin-bottom: 1rem;
+}
+
+/******************************* */
+/* edit                          */
+/******************************* */
+.container.pageedit form {
+}

@@ -1,9 +1,7 @@
-<h1>{{ article.title }}</h1>
-<div>{{ formatDate article.createdAt }}</div>
-<div>{{{ article.sanitizedHtml }}}</div>
-<div class="edit">
-  <a href="/articles/edit/{{ article._id }}">{{__ "edit"}}</a>
-  <form action="/articles/{{ article._id }}?_method=delete" method="POST">
-    <button type="submit">{{ __ "delete" }}</button>
-  <form>
-</div>
+<article>
+  <header>
+    <h1>{{ article.title }}</h1>
+    <time class="createdAt" datetime="{{ formatDate article.createdAt showTime=true }}">{{ formatDate article.createdAt }}</time>
+  </header>
+  <div>{{{ article.sanitizedHtml }}}</div>
+</article>
