@@ -27,7 +27,9 @@
   "path": "path",
   "urlpath": "urlpath",
   "filetype not supported": "Dateityp wird nicht unterstützt",
-  "searchstr": "searchstr",
-  "search": "search",
-  "url": "url"
+  "searchstr": "Suchstring",
+  "search": "Suchen",
+  "url": "URL",
+  "edit sitemaps": "Sitemaps",
+  "name": "Name"
 }

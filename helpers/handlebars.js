@@ -18,8 +18,19 @@ const select = function (selected, options) {
       '$& selected="selected"');
 }
 
+/*
+ * https://github.com/jmurphyau/ember-truth-helpers
+ * {{#if (eq @index 0)}}
+ *   WORKS
+ * {{/if}}
+ */
+const eq = function (a, b) {
+  return a === b
+}
+
 export {
   formatDate,
   json,
   select,
+  eq,
 }

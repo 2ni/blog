@@ -18,6 +18,7 @@ import * as handlebarsHelpers from "./helpers/handlebars.js"
 import articleRoutes from "./routes/articles.js"
 import pageRoutes from "./routes/pages.js"
 import uploadRoutes from "./routes/uploads.js"
+import sitemapsRoutes from "./routes/sitemaps.js"
 
 import db from "./models/app.js"
 process.stdout.write("waiting for DB...")
@@ -32,6 +33,15 @@ try {
 
 // db.mongoose.set("debug", { shell: true })
 console.log("\x1B[32;1msuccess\x1B[0m")
+
+db.mongoose.connection.once("open", async () => {
+  if (db.sitemaps.countDocuments().exec() == 0) {
+    console.log("sitemaps set up")
+    // TODO
+    // Promise.all([
+    // ]).then(() => console.log("all done"))
+  }
+})
 
 const app = express()
 app.use(methodOverride("_method"))
@@ -53,10 +63,13 @@ app.use(i18n.init)
 
 // middleware to set language depending on url
 // https://stackoverflow.com/questions/19539332/localization-nodejs-i18n
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   // console.log("ip", req.socket.remoteAddress)
   res.setLocale("de")
   req.setLocale("de")
+
+  res.locals.sitemaps = await db.sitemaps.findOne().lean()
+
   next()
 })
 
@@ -68,8 +81,14 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use("/articles", articleRoutes)
 app.use("/pages", pageRoutes)
 app.use("/uploads", uploadRoutes)
+app.use("/sitemaps", sitemapsRoutes)
 
 app.get("/", async (req, res) => {
+  /*
+  let sitemaps = new db.sitemaps()
+  sitemaps.content = [{ name: "home", url: "/" }, { name: "articles", url: "/articles" }]
+  await sitemaps.save()
+  */
   const page = await db.pages.findOne({ url: "/", status: "published" }).lean()
   if (page === null) {
     const pages = await db.pages.find({ status: "published" }).lean()
@@ -81,7 +100,12 @@ app.get("/", async (req, res) => {
 app.get("*", async (req, res) => {
   // console.log(res.__("hello"), res.getLocale(), res.getLocales())
   const page = await db.pages.findOne({ url: req.params[0], status: "published" }).lean()
-  res.render(page === null ? "404": "pages/show", { page: page, pagetype: "pagedetail" })
+  if (page === null) {
+    res.status(404)
+    res.render("404")
+  } else {
+    res.render("pages/show", { page: page, pagetype: "pagedetail" })
+  }
 })
 
 app.listen(config.port, (err) => {

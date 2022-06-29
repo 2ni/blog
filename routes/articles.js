@@ -2,13 +2,38 @@ import express from "express"
 const router = express.Router()
 import db from "../models/app.js"
 
-router.get("/", async (req, res) => {
+router.get("/:page([0-9]+)?/:limit([0-9]+)?", async (req, res) => {
   // console.log(res.__("hello"), res.getLocale(), res.getLocales())
-  const articles = await db.articles.find({ status: "published" }).sort({ createdAt: "desc" }).lean()
+  // const page = parseInt(req.query.page) || 1
+  // const limit = parseInt(req.query.limit) || 10
+  const page = parseInt(req.params.page) || 1
+  const limit = parseInt(req.params.limit) || 10
+  const startIndex = (page - 1) * limit
+  const endIndex = page * limit
+
+  const articles = await db.articles.find({ status: "published" }).limit(limit).skip(startIndex).sort({ createdAt: "desc" }).lean()
+  if (!articles.length) {
+    res.status(404)
+    return res.render("404")
+  }
+  let next = {}
+  let previous = {}
+  if (startIndex) {
+    previous = { previous: { page: page - 1, limit: limit}}
+  }
+  if (endIndex < await db.articles.count({ status: "published" }).exec()) {
+    next = { next: { page: page + 1, limit: limit}}
+  }
+  console.log({...next, ...previous})
+
   res.render("articles/index", {
-    title: "Articles",
-    articles: articles,
-    pagetype: "articleindex",
+    ...next,
+    ...previous,
+    ...{
+      title: "Articles",
+      articles: articles,
+      pagetype: "articleindex",
+    }
   })
 })
 
@@ -22,12 +47,12 @@ router.get("/drafts", async (req, res) => {
 })
 
 router.get("/new", (req, res) => {
-  res.render("articles/new")
+  res.render("articles/new", { pagetype: "contentedit" })
 })
 
 router.get("/edit/:id", async (req, res) => {
   const article = await db.articles.findById(req.params.id).lean()
-  res.render("articles/edit", { article: article })
+  res.render("articles/edit", { article: article, pagetype: "contentedit" })
 })
 
 router.get("/:slug", async (req, res) => {

@@ -29,5 +29,7 @@
   "filetype not supported": "filetype not supported",
   "searchstr": "searchstr",
   "search": "search",
-  "url": "url"
+  "url": "url",
+  "edit sitemaps": "edit sitemaps",
+  "name": "name"
 }

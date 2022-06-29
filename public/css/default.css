@@ -11,6 +11,10 @@ body {
   font-family: FiraCode;
 }
 
+button, select {
+  font-family: FiraCode;
+}
+
 /******************************* */
 /* navigation                    */
 /******************************* */
@@ -126,5 +130,89 @@ nav ul li:first-child a {
 /******************************* */
 /* edit                          */
 /******************************* */
-.container.pageedit form {
+.container.contentedit form {
+}
+
+.container.contentedit form fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 1rem;
+}
+
+.container.contentedit form label {
+  display: block;
+  font-size: .8rem;
+  margin-bottom: .2rem;
+}
+
+.container.contentedit form input,
+.container.container form select,
+.container.contentedit form textarea {
+  font-size: 1rem;
+  padding: .2rem .5rem;
+  width: 100%;
+  max-width: 50rem;
+  box-sizing: border-box;
+  border: 1px solid #B3C8DD;
+}
+
+.container.contentedit form textarea {
+  height: 40rem;
+  max-width: unset;
+}
+
+.container.contentedit form textarea[name="description"] {
+  height: 5rem;
+}
+
+.container.contentedit form button[name="submit"] ,
+.container.contentedit form .actions a {
+  background-color: #B3C8DD;
+  padding: .5rem 1rem;
+  border: 1px solid #8E916E;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 1rem;
+  color: #000;
+}
+
+.container.contentedit form .actions a {
+  background-color: #E8F4FF;
+}
+
+.container.contentedit form button[name="submit"]:hover,
+.container.contentedit form .actions a:hover {
+  background-color: #677C91;
+}
+
+
+/******************************* */
+/* sitemaps edit                 */
+/******************************* */
+.container.sitemapsedit form fieldset {
+  border: 0;
+  display: flex;
+  padding: 0;
+  margin: 0;
+  margin-bottom: .5rem;
+}
+
+.container.sitemapsedit form fieldset:first-child {
+  margin-bottom: 0;
+}
+
+.container.sitemapsedit form fieldset div {
+  width: 20rem;
+  margin-right: 1rem;
+}
+
+.container.sitemapsedit form fieldset.actions div:last-child {
+  text-align: right;
+}
+
+.container.sitemapsedit form fieldset input {
+  width: 100%;
+  font-size: 1rem;
+  box-sizing: border-box;
 }

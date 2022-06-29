@@ -12,12 +12,12 @@ router.get("/drafts", async (req, res) => {
 })
 
 router.get("/new", (req, res) => {
-  res.render("pages/new", { pagetype: "pageedit" })
+  res.render("pages/new", { pagetype: "contentedit" })
 })
 
 router.get("/edit/:id", async (req, res) => {
   const page = await db.pages.findById(req.params.id).lean()
-  res.render("pages/edit", { page: page, pagetype: "pageedit" })
+  res.render("pages/edit", { page: page, pagetype: "contentedit" })
 })
 
 router.post("/", async (req, res, next) => {
