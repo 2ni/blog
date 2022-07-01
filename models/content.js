@@ -50,9 +50,11 @@ const descriptionList = {
   }
 }
 marked.use({ extensions: [descriptionList] })
+/*
 console.log(marked.parse("some text ![alt](somepic.png|width  =200, height=300)."))
 console.log(marked.parse("some text ![alt](somepic.png)."))
 console.log(marked.parse("some text ![alt](somepic.png|thumbnail)."))
+*/
 
 
 // TODO use validateSync() in routes to check
@@ -68,6 +70,7 @@ const contentSchema = new mongoose.Schema({
   sanitizedHtml: {
     type: String,
   },
+  attachments: [String],
 }, { timestamps: true })
 
 contentSchema.pre("validate", function(next) {

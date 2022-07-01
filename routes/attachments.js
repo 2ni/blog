@@ -14,6 +14,8 @@ const mime_map = {
   "image/jpg": "jpg",
 }
 
+const allowedContent = [ "article", "page" ]
+
 const baseStoragePath = "attachments"
 
 /*
@@ -23,7 +25,9 @@ const splitImagePath = (filename) => {
   return path.join(filename.match(/.{1,2}/g).slice(0, 2).join("/"))
 }
 
-
+/*
+ * based on https://www.bezkoder.com/node-js-upload-resize-multiple-images/
+ */
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     return cb(null, baseStoragePath)
@@ -33,10 +37,10 @@ const storage = multer.diskStorage({
     const origFilename = file.originalname.toLowerCase().replace(/ /g, "-").replace(/\.[^.]+$/, "")
     const extension = mime_map[file.mimetype]
     const filename = crypto.createHash("md5").update(uniqueSuffix + "-" + origFilename + "." + extension).digest("hex") + "-" + origFilename + "." + extension
+    file.filenameNaked = filename
 
     const subdirImg = splitImagePath(filename)
     const dir = path.join(baseStoragePath, subdirImg)
-    console.log("dir", dir)
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true })
     }
@@ -51,11 +55,44 @@ const upload = multer({
     if (mime_map[file.mimetype]) {
       cb(null, true)
     } else {
-      console.log("mime", file.mimetype)
-      return cb(new Error(req.__("filetype not supported")))
+      return cb(new Error(req.__(`filetype ${file.memtype} not supported`)))
     }
   },
 }).array("files", 5)
+
+const uploadAttachments = async (req, res, next) => {
+  await upload(req, res, (err) => {
+    if (err) return res.status(413).json({ "status": "error", "msg": err.message })
+
+    next()
+  })
+}
+
+const resizeAttachments = async (req, res, next) => {
+  if (!req.files) return next()
+
+  await Promise.all(
+    req.files.map((file) => {
+      sharp(file.path, { failOnError: false })
+        .resize(200, 200, { fit: "inside" })
+        .toFile(file.path.replace(/(\.[^.]*)$/, ".thumbnail$1"), (err, info) => {
+          if (err) console.log("res", err)
+        })
+    })
+  )
+  next()
+}
+
+const validateRequest = async (req, res, next) => {
+  if (allowedContent.indexOf(req.params.content) === -1) {
+    return res.status(400).json({ "status": "error", "msg": "content must be \"article\" or \"page\"" })
+  }
+
+  if (await !db[req.params.content + "s"].findById(req.params.id)) {
+    return res.status(413).json({ "status": "error", "msg": `${req.params.content} ${req.params.id} not found` })
+  }
+  next()
+}
 
 /*
  * see https://stackoverflow.com/questions/17515699/node-express-sending-image-files-as-api-response#answer-56873042
@@ -85,22 +122,24 @@ router.get("/:size?/:filename", (req, res) => {
 })
 
 /*
- * http -bf post :3001/attachments files@someimage.png files@someotherimage.jpg
+ * http -bf post :3001/attachments/page/62b6ffac2fff4a4a4845ac5b files@someimage.png files@someotherimage.jpg
+ *
+ * mongoshell > db.pages.update({_id: ObjectId("62b6ffac2fff4a4a4845ac5b")}, { $set : {"attachments": [] }}, { multi: true})
+ * mongoshell > db.articles.find({}, { "title": 1, "attachments": 1 })
+ *
  * see https://stackoverflow.com/questions/39350040/uploading-multiple-files-with-multer
+ *
+ * :content: "page", "article"
  */
-router.post("/", async (req, res) => {
-  await upload(req, res, (err) => {
-    // create thumbnails
-    req.files.forEach((file) => {
-      sharp(file.path, { failOnError: false })
-        .resize(200, 200, { fit: "inside" })
-        .toFile(file.path.replace(/(\.[^.]*)$/, ".thumbnail$1"), (err, info) => {
-          console.log("res", err, info)
-        })
-    })
-    if (err) return res.status(413).json({ "status": "error", "msg": err.message })
-    return res.status(200).json({"status": "ok", "files": req.files.map((file) => { return file.path }) })
-  })
+router.post("/:content/:id", validateRequest, uploadAttachments, resizeAttachments, async (req, res) => {
+  const docs = await db[req.params.content + "s"].findByIdAndUpdate(
+    req.params.id,
+    { $push: { attachments : { $each: req.files.map((file) => { return file.filenameNaked }) } } }
+  )
+
+  if (docs === null) return res.status(413).json({ "status": "error", "msg": `${req.params.content} ${req.params.id} not found` })
+
+  return res.status(200).json({"status": "ok", "files": req.files.map((file) => { return file.path }) })
 })
 
 export default router
