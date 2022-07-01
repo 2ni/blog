@@ -6,9 +6,9 @@ import { engine } from "express-handlebars"
 import i18n from "i18n"
 import os from "os"
 import path from "path"
+import methodOverride from "method-override"
 import { fileURLToPath } from "url"
 import { dirname } from "path"
-import methodOverride from "method-override"
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
@@ -17,7 +17,7 @@ import * as handlebarsHelpers from "./helpers/handlebars.js"
 
 import articleRoutes from "./routes/articles.js"
 import pageRoutes from "./routes/pages.js"
-import uploadRoutes from "./routes/uploads.js"
+import attachmentRoutes from "./routes/attachments.js"
 import sitemapsRoutes from "./routes/sitemaps.js"
 
 import db from "./models/app.js"
@@ -80,7 +80,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use("/articles", articleRoutes)
 app.use("/pages", pageRoutes)
-app.use("/uploads", uploadRoutes)
+app.use("/attachments", attachmentRoutes)
 app.use("/sitemaps", sitemapsRoutes)
 
 app.get("/", async (req, res) => {

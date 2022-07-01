@@ -1,7 +1,7 @@
 ### Installation
 ```
 npm init -y
-npm i express mongoose helmet express-handlebars compression i18n marked slugify method-override dompurify jsdom multer
+npm i express mongoose helmet express-handlebars compression i18n marked slugify method-override dompurify jsdom multer sharp
 npm i --save-dev nodemon
 ```
 - add the following to packacke.json to allow esm syntax:

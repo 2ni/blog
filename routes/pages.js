@@ -42,7 +42,6 @@ function saveAndRedirect(command) {
     page.title = req.body.title
     page.url = path.join("/", req.body.url.replace(/[^a-zA-Z0-9\/]/, ""))
     page.markdown = req.body.markdown.replace(/\n/g, "")
-    console.log("page", page)
 
     try {
       page = await page.save()

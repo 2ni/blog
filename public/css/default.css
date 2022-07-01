@@ -82,6 +82,11 @@ nav ul li:first-child a {
   margin-bottom: 0;
 }
 
+.container.articledetail img,
+.container.pagedetail img {
+  max-width: 100%;
+}
+
 .container.articledetail header time,
 .container.articleindex header time,
 .container.pagedetail header time {
