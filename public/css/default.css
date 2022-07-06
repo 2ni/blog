@@ -11,6 +11,13 @@ body {
   font-family: FiraCode;
 }
 
+pre.debug {
+  background: #DE9ED0;
+  font-size: .8rem;
+  padding: .2rem;
+  box-sizing: border-box;
+}
+
 button, select {
   font-family: FiraCode;
 }
@@ -77,35 +84,32 @@ nav ul li:first-child a {
 /******************************* */
 /* article, page                 */
 /******************************* */
-.container.articledetail header h1,
-.container.pagedetail header h1 {
+.container article header h1 {
   margin-bottom: 0;
 }
 
-.container.articledetail img,
-.container.pagedetail img {
+.container article img {
   max-width: 100%;
 }
 
-.container.articledetail header time,
-.container.articleindex header time,
-.container.pagedetail header time {
+.container section.articles header time,
+.container article header time {
   font-size: .8rem;
   color: #4C555E;
 }
 
-.container.articleindex h4 {
+.container section.articles h4 {
   margin: 0;
 }
 
-.container.articleindex ul {
+.container  section.articles ul {
   display: flex;
   list-style: none;
   padding: 0;
   flex-wrap: wrap;
 }
 
-.container.articleindex li {
+.container section.articles li {
   background: #DECEB4;
   margin-right: .5rem;
   margin-bottom: .5rem;
@@ -113,7 +117,7 @@ nav ul li:first-child a {
   height: 10rem;
 }
 
-.container.articleindex li a {
+.container section.articles li a {
   text-decoration: none;
   padding: .5rem;
   height: 100%;
@@ -124,36 +128,36 @@ nav ul li:first-child a {
   color: #000;
 }
 
-.container.articleindex li a:hover {
+.container section.articles li a:hover {
   border: 1px solid black;
 }
 
-.container.articleindex li header {
+.container section.articles li header {
   margin-bottom: 1rem;
 }
 
 /******************************* */
 /* edit                          */
 /******************************* */
-.container.contentedit form {
+.container section.edit form {
 }
 
-.container.contentedit form fieldset {
+.container section.edit form fieldset {
   border: 0;
   padding: 0;
   margin: 0;
   margin-bottom: 1rem;
 }
 
-.container.contentedit form label {
+.container section.edit form label {
   display: block;
   font-size: .8rem;
   margin-bottom: .2rem;
 }
 
-.container.contentedit form input,
-.container.container form select,
-.container.contentedit form textarea {
+.container section.edit form input,
+.container section.edit form select,
+.container section.edit form textarea {
   font-size: 1rem;
   padding: .2rem .5rem;
   width: 100%;
@@ -162,17 +166,17 @@ nav ul li:first-child a {
   border: 1px solid #B3C8DD;
 }
 
-.container.contentedit form textarea {
+.container section.edit form textarea {
   height: 40rem;
   max-width: unset;
 }
 
-.container.contentedit form textarea[name="description"] {
+.container section.edit form textarea[name="description"] {
   height: 5rem;
 }
 
-.container.contentedit form button[name="submit"] ,
-.container.contentedit form .actions a {
+.container section.edit form button[name="submit"] ,
+.container section.edit form .actions a {
   background-color: #B3C8DD;
   padding: .5rem 1rem;
   border: 1px solid #8E916E;
@@ -182,12 +186,12 @@ nav ul li:first-child a {
   color: #000;
 }
 
-.container.contentedit form .actions a {
+.container section.edit form .actions a {
   background-color: #E8F4FF;
 }
 
-.container.contentedit form button[name="submit"]:hover,
-.container.contentedit form .actions a:hover {
+.container section.edit form button[name="submit"]:hover,
+.container section.edit form .actions a:hover {
   background-color: #677C91;
 }
 
@@ -195,28 +199,26 @@ nav ul li:first-child a {
 /******************************* */
 /* sitemaps edit                 */
 /******************************* */
-.container.sitemapsedit form fieldset {
-  border: 0;
+.container section.edit.sitemaps form fieldset {
   display: flex;
-  padding: 0;
-  margin: 0;
   margin-bottom: .5rem;
 }
 
-.container.sitemapsedit form fieldset:first-child {
+.container section.edit.sitemaps form fieldset:first-child {
   margin-bottom: 0;
 }
 
-.container.sitemapsedit form fieldset div {
+.container section.edit.sitemaps form fieldset div {
   width: 20rem;
   margin-right: 1rem;
 }
 
-.container.sitemapsedit form fieldset.actions div:last-child {
+.container section.edit.sitemaps form fieldset.actions div:last-child {
+  margin-top: 1rem;
   text-align: right;
 }
 
-.container.sitemapsedit form fieldset input {
+.container section.edit.sitemaps form fieldset input {
   width: 100%;
   font-size: 1rem;
   box-sizing: border-box;

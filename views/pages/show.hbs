@@ -1,9 +1,9 @@
-<section>
-  {{#if page.title }}
+<article class="page">
+  {{#if content.title }}
   <header>
-    <h1>{{ page.title }}</h1>
-    <time datetime="{{ formatDate page.createdAt showTime=true }}">{{ formatDate page.createdAt }}</time>
+    <h1>{{ content.title }}</h1>
+    <time datetime="{{ formatDate content.createdAt showTime=true }}">{{ formatDate content.createdAt }}</time>
   </header>
   {{/if }}
-  <div>{{{ page.sanitizedHtml }}}</div>
-</section>
+  <div>{{{ content.sanitizedHtml }}}</div>
+</article>

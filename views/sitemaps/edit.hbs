@@ -1,37 +1,39 @@
-<h1>{{__ "edit sitemaps"}}</h1>
-<form action="/sitemaps?_method=put" method="post">
-  <fieldset>
-    <div>
-      <label for"labelName">{{__ "name" }}</label>
-    </div>
-    <div>
-      <label for"labelUrl">{{__ "url" }}</label>
-    </div>
-  </fieldset>
-  {{#each sitemaps.content }}
-  <fieldset>
-    <div>
-      <input type="text" id="{{#if (eq @index 0) }}labelName{{/if }}" name="name[]" value="{{ this.name }}"></input>
-    </div>
-    <div>
-      <input type="text" id="{{#if (eq @index 0)}}labelUrl{{/if}}" name="url[]" value="{{ this.url }}"></input>
-    </div>
-    <button formaction="/sitemaps/delete/{{@key}}?_method=put" type="submit">{{../__ "delete" }}</button>
-  </fieldset>
-  {{/each }}
-  <fieldset class="new">
-    <div>
-      <input type="text" name="name[]" value=""></input>
-    </div>
-    <div>
-      <input type="text" name="url[]" value=""></input>
-    </div>
-  </fieldset>
-  <fieldset class="actions">
-    <div></div>
-    <div>
-      <a href="/">{{ __ "cancel" }}</a>
-      <button value="save" type="submit">{{ __ "save" }}</button>
-    </div>
-  </fieldset>
-</form>
+<section class="edit sitemaps">
+  <h1>{{__ "edit sitemaps"}}</h1>
+  <form action="/sitemaps?_method=put" method="post">
+    <fieldset>
+      <div>
+        <label for"labelName">{{__ "name" }}</label>
+      </div>
+      <div>
+        <label for"labelUrl">{{__ "url" }}</label>
+      </div>
+    </fieldset>
+    {{#each sitemaps.content }}
+    <fieldset>
+      <div>
+        <input type="text" id="{{#if (eq @index 0) }}labelName{{/if }}" name="name[]" value="{{ this.name }}"></input>
+      </div>
+      <div>
+        <input type="text" id="{{#if (eq @index 0)}}labelUrl{{/if}}" name="url[]" value="{{ this.url }}"></input>
+      </div>
+      <button formaction="/sitemaps/delete/{{@key}}?_method=put" type="submit">{{../__ "delete" }}</button>
+    </fieldset>
+    {{/each }}
+    <fieldset class="new">
+      <div>
+        <input type="text" name="name[]" value=""></input>
+      </div>
+      <div>
+        <input type="text" name="url[]" value=""></input>
+      </div>
+    </fieldset>
+    <fieldset class="actions">
+      <div></div>
+      <div>
+        <a href="/">{{ __ "cancel" }}</a>
+        <button value="save" name="submit" type="submit">{{ __ "save" }}</button>
+      </div>
+    </fieldset>
+  </form>
+</section>

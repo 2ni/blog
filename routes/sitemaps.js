@@ -4,7 +4,7 @@ import db from "../models/app.js"
 
 router.get("/", async (req, res) => {
   const sitemaps = await db.sitemaps.findOne().lean()
-  res.render("sitemaps/edit", { sitemaps: sitemaps, pagetype: "sitemapsedit" })
+  res.render("sitemaps/edit", { sitemaps: sitemaps })
 })
 
 router.put("/", async (req, res, next) => {

@@ -1,6 +1,6 @@
 <h1>{{ __ "drafts" }}</h1>
 <ul>
-  {{#each pages}}
+  {{#each contents}}
   <li>
     <h4><a href="/pages/edit/{{ this._id }}">{{#if this.title }} {{ this.title}} {{else}} index {{/if }}</a></h4>
     <div class="subtitle">{{formatDate this.createdAt}}</div>

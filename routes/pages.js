@@ -7,17 +7,17 @@ router.get("/drafts", async (req, res) => {
   const pages = await db.pages.find({ status: "draft" }).sort({ createdAt: "desc" }).lean()
   res.render("pages/drafts", {
     title: "Pages",
-    pages: pages,
+    contents: pages,
   })
 })
 
 router.get("/new", (req, res) => {
-  res.render("pages/new", { pagetype: "contentedit" })
+  res.render("pages/new", { type: "pages" })
 })
 
 router.get("/edit/:id", async (req, res) => {
   const page = await db.pages.findById(req.params.id).lean()
-  res.render("pages/edit", { page: page, pagetype: "contentedit" })
+  res.render("pages/edit", { content: page, type: "pages" })
 })
 
 router.post("/", async (req, res, next) => {
@@ -48,7 +48,7 @@ function saveAndRedirect(command) {
       res.redirect(page.url)
     } catch (e) {
       console.log(e)
-      res.render(`pages/${command}`, { page: page })
+      res.render(`pages/${command}`, { content: page })
     }
   }
 }

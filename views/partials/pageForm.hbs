@@ -1,7 +1,7 @@
 <fieldset>
   <label for="status">{{ __ "status" }}</label>
   <select name="status" id="status">
-    {{# select page.status }}
+    {{# select content.status }}
     <option value="draft">{{ __ "draft" }}</option>
     <option value="published">{{ __ "published" }}</option>
     {{/ select }}
@@ -9,15 +9,15 @@
 </fieldset>
 <fieldset>
   <label for="url">{{ __ "url" }}</label>
-  <input type="text" value="{{ page.url }}" name="url" id="url"></input>
+  <input type="text" value="{{ content.url }}" name="url" id="url"></input>
 </fieldset>
 <fieldset>
   <label for="title">{{ __ "title" }}</label>
-  <input type="text" value="{{ page.title }}" name="title" id="title"></input>
+  <input type="text" value="{{ content.title }}" name="title" id="title"></input>
 </fieldset>
 <fieldset>
   <label for="markdown">{{ __ "markdown" }}</label>
-  <textarea type="text" name="markdown" id="markdown">{{ page.markdown }}</textarea>
+  <textarea type="text" name="markdown" id="markdown">{{ content.markdown }}</textarea>
 </fieldset>
 <fieldset class="actions">
   <a href="/">{{ __ "cancel" }}</a>

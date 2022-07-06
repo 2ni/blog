@@ -8,7 +8,7 @@ const formatDate = (timestamp, options = {}) => {
 }
 
 const json = (object) => {
-  return JSON.stringify(object)
+  return JSON.stringify(object, null, "  ")
 }
 
 // https://stackoverflow.com/questions/13046401/how-to-set-selected-select-option-in-handlebars-template

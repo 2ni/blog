@@ -94,7 +94,7 @@ app.get("/", async (req, res) => {
     const pages = await db.pages.find({ status: "published" }).lean()
     res.render("index", { pages: pages })
   }
-  else res.render("pages/show", { page: page, pagetype: "pagedetail" })
+  else res.render("pages/show", { content: page, type: "pages" })
 })
 
 app.get("*", async (req, res) => {
@@ -104,7 +104,7 @@ app.get("*", async (req, res) => {
     res.status(404)
     res.render("404")
   } else {
-    res.render("pages/show", { page: page, pagetype: "pagedetail" })
+    res.render("pages/show", { content: page, type: "pages" })
   }
 })
 

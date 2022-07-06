@@ -27,11 +27,10 @@
       <li><a href="/pages/drafts">{{ __ "page drafts" }}</a></li>
       <li><a href="/pages/new">{{ __ "new page" }}</a></li>
       <li><a href="/sitemaps">{{ __ "edit sitemaps" }}</a></li>
-      {{# if article }}<li><a href="/articles/edit/{{ article._id }}">{{__ "edit"}}</a></li>{{/if }}
-      {{# if page }}<li><a href="/pages/edit/{{ page._id }}">{{__ "edit"}}</a></li>{{/if }}
+      {{# if type }}<li><a href="/{{ type }}/edit/{{ content._id }}">{{__ "edit"}}</a></li>{{/if }}
     </ul>
   </nav>
-  <div class="container {{pagetype}}">
+  <div class="container">
     {{{body}}}
   </div>
 </body>

@@ -1,11 +1,11 @@
 <fieldset>
   <label for="title">{{ __ "title" }}</label>
-  <input required type="text" value="{{ article.title }}" name="title" id="title"></input>
+  <input required type="text" value="{{ content.title }}" name="title" id="title"></input>
 </fieldset>
 <fieldset>
   <label for="status">{{ __ "status" }}</label>
   <select name="status" id="status">
-    {{# select article.status }}
+    {{# select content.status }}
     <option value="draft">{{ __ "draft" }}</option>
     <option value="published">{{ __ "published" }}</option>
     {{/ select }}
@@ -13,11 +13,11 @@
 </fieldset>
 <fieldset>
   <label for="description">{{ __ "description" }}</label>
-  <textarea type="text" name="description" id="description">{{ article.description }}</textarea>
+  <textarea type="text" name="description" id="description">{{ content.description }}</textarea>
 </fieldset>
 <fieldset>
   <label for="markdown">{{ __ "markdown" }}</label>
-  <textarea type="text" name="markdown" id="markdown">{{ article.markdown }}</textarea>
+  <textarea type="text" name="markdown" id="markdown">{{ content.markdown }}</textarea>
 </fieldset>
 <fieldset class="actions">
   <a href="/">{{ __ "cancel" }}</a>
