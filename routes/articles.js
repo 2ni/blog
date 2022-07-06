@@ -1,6 +1,7 @@
 import express from "express"
 const router = express.Router()
 import db from "../models/app.js"
+import path from "path"
 
 router.get("/:page([0-9]+)?/:limit([0-9]+)?", async (req, res) => {
   // console.log(res.__("hello"), res.getLocale(), res.getLocales())
@@ -45,18 +46,18 @@ router.get("/drafts", async (req, res) => {
 })
 
 router.get("/new", (req, res) => {
-  res.render("articles/new", { type: "articles" })
+  res.render("articles/new")
 })
 
-router.get("/edit/:id", async (req, res) => {
-  const article = await db.articles.findById(req.params.id).lean()
-  res.render("articles/edit", { content: article, type: "articles" })
+router.get("/edit/:slug", async (req, res) => {
+  const article = await db.articles.findOne({ slug: req.params.slug }).lean()
+  res.render("articles/edit", { content: article, edit: path.join("articles/edit", article.slug) })
 })
 
 router.get("/:slug", async (req, res) => {
   const article = await db.articles.findOne({ slug: req.params.slug }).lean()
   if (article === null) res.redirect("/")
-  res.render("articles/show", { content: article, type: "articles" })
+  res.render("articles/show", { content: article, edit: path.join("articles/edit", article.slug) })
 })
 
 router.post("/", async (req, res, next) => {
