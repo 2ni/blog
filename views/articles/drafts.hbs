@@ -1,15 +1,17 @@
-<h1>{{ __ "drafts" }}</h1>
-<ul>
-  {{#each contents}}
-  <li>
-    <a href="/articles/edit/{{ this._id }}">
-      <header>
-        <h4>{{ this.title }}</h4>
-        <time datetime="{{formatDate this.createdAt showTime=true }}">{{formatDate this.createdAt}}</time>
-      </header>
-      <div class="description">{{ this.description }}</div>
-    </a>
+<section class="articles">
+  <h1>{{ __ "drafts" }}</h1>
+  <ul>
+    {{#each contents}}
+    <li>
+      <a href="/articles/{{ this.slug }}/edit">
+        <header>
+          <h4>{{ this.title }}</h4>
+          <time datetime="{{formatDate this.createdAt showTime=true }}">{{formatDate this.createdAt}}</time>
+        </header>
+        <div class="description">{{ this.description }}</div>
+      </a>
 
-  </li>
-  {{/each}}
-</ul>
+    </li>
+    {{/each}}
+  </ul>
+</section>

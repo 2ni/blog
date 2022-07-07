@@ -94,13 +94,13 @@ app.get("/", async (req, res) => {
     const pages = await db.pages.find({ status: "published" }).lean()
     res.render("index", { pages: pages })
   }
-  else res.render("pages/show", { content: page, edit: "edit/index" })
+  else res.render("pages/show", { content: page, edit: "/edit" })
 })
 
-app.get("/edit/*", async (req, res) => {
-  if (req.params[0] === "index") req.params[0] = ""
-  const page = await db.pages.findOne({ url: path.join("/", req.params[0]) }).lean()
-  res.render("pages/edit", { content: page, edit: path.join("edit", req.params[0]) })
+app.get("*/edit$", async (req, res) => {
+  if (req.params[0] === "") req.params[0] = "/"
+  const page = await db.pages.findOne({ url: req.params[0] }).lean()
+  res.render("pages/edit", { content: page, edit: path.join(req.params[0], "edit") })
 })
 
 app.get("*", async (req, res) => {
@@ -110,7 +110,7 @@ app.get("*", async (req, res) => {
     res.status(404)
     res.render("404")
   } else {
-    res.render("pages/show", { content: page, edit: path.join("edit", req.params[0]) })
+    res.render("pages/show", { content: page, edit: path.join(req.params[0], "edit") })
   }
 })
 

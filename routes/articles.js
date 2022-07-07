@@ -25,7 +25,7 @@ router.get("/:page([0-9]+)?/:limit([0-9]+)?", async (req, res) => {
   if (endIndex < await db.articles.count({ status: "published" }).exec()) {
     next = { next: { page: page + 1, limit: limit}}
   }
-  console.log({...next, ...previous})
+  // console.log({...next, ...previous})
 
   res.render("articles/index", {
     ...next,
@@ -49,15 +49,15 @@ router.get("/new", (req, res) => {
   res.render("articles/new")
 })
 
-router.get("/edit/:slug", async (req, res) => {
+router.get("/:slug/edit", async (req, res) => {
   const article = await db.articles.findOne({ slug: req.params.slug }).lean()
-  res.render("articles/edit", { content: article, edit: path.join("articles/edit", article.slug) })
+  res.render("articles/edit", { content: article, edit: path.join("/articles", article.slug, "edit") })
 })
 
 router.get("/:slug", async (req, res) => {
   const article = await db.articles.findOne({ slug: req.params.slug }).lean()
   if (article === null) res.redirect("/")
-  res.render("articles/show", { content: article, edit: path.join("articles/edit", article.slug) })
+  res.render("articles/show", { content: article, edit: path.join("/articles", article.slug, "edit") })
 })
 
 router.post("/", async (req, res, next) => {
