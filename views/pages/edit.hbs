@@ -1,10 +1,11 @@
 <section class="edit">
   <h1>{{__ "edit page"}}</h1>
-  <pre class="debug">{{ json content }}</pre>
   <form action="/pages/{{ content._id }}?_method=put" method="post">
     {{> pageForm }}
   </form>
   <form action="/pages/{{ content._id }}?_method=delete" method="post">
     <button name="delete" type="submit">{{ __ "delete" }}</button>
-  <form>
+  </form>
 </section>
+{{> showAttachments }}
+<pre class="debug">{{ json content }}</pre>

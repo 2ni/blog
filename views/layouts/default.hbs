@@ -9,7 +9,7 @@
   <link href="/css/default.css" rel="stylesheet">
 </head>
 <body>
-  <nav>
+  <nav class="main">
     <ul>
       {{#each sitemaps.content }}
       <li><a href="{{ this.url }}">{{ this.name }}</a></li>
@@ -21,7 +21,9 @@
         </form>
       </li>
     </ul>
-    <ul class="admin">
+  </nav>
+  <nav class="admin">
+    <ul>
       <li><a href="/articles/drafts">{{ __ "article drafts" }}</a></li>
       <li><a href="/articles/new">{{ __ "new article" }}</a></li>
       <li><a href="/pages/drafts">{{ __ "page drafts" }}</a></li>

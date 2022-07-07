@@ -1,3 +1,5 @@
+import { splitImagePath } from "../helpers/utils.js"
+
 const formatDate = (timestamp, options = {}) => {
   // return new Date(timestamp).toLocaleDateString()
   let dateString = new Date(timestamp).toISOString()
@@ -28,9 +30,14 @@ const eq = function (a, b) {
   return a === b
 }
 
+const getAttachmentUrl = (filename) => {
+  return splitImagePath(filename)
+}
+
 export {
   formatDate,
   json,
   select,
   eq,
+  getAttachmentUrl,
 }

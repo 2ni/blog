@@ -31,5 +31,7 @@
   "search": "search",
   "url": "url",
   "edit sitemaps": "edit sitemaps",
-  "name": "name"
+  "name": "name",
+  "files": "files",
+  "upload": "upload"
 }

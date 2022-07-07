@@ -7,6 +7,7 @@ import crypto from "crypto"
 import sharp from "sharp"
 const router = express.Router()
 import db from "../models/app.js"
+import { splitImagePath } from "../helpers/utils.js"
 
 const mime_map = {
   "image/png": "png",
@@ -17,13 +18,6 @@ const mime_map = {
 const allowedContent = [ "article", "page" ]
 
 const baseStoragePath = "attachments"
-
-/*
- * c1cb20f5151f9482c7562a2c551f38b5-image.png -> c1/cb/c1cb20f5151f9482c7562a2c551f38b5-image.png
- */
-const splitImagePath = (filename) => {
-  return path.join(filename.match(/.{1,2}/g).slice(0, 2).join("/"))
-}
 
 /*
  * based on https://www.bezkoder.com/node-js-upload-resize-multiple-images/
@@ -122,7 +116,7 @@ router.get("/:size?/:filename", (req, res) => {
 })
 
 /*
- * http -bf post :3001/attachments/page/62b6ffac2fff4a4a4845ac5b files@someimage.png files@someotherimage.jpg
+ * http -bf post :3001/attachments/page/62b6ffac2fff4a4a4845ac5b[?respond=[page|article]] files@someimage.png files@someotherimage.jpg
  *
  * mongoshell > db.pages.update({_id: ObjectId("62b6ffac2fff4a4a4845ac5b")}, { $set : {"attachments": [] }}, { multi: true})
  * mongoshell > db.articles.find({}, { "title": 1, "attachments": 1 })
@@ -137,9 +131,13 @@ router.post("/:content/:id", validateRequest, uploadAttachments, resizeAttachmen
     { $push: { attachments : { $each: req.files.map((file) => { return file.filenameNaked }) } } }
   )
 
-  if (docs === null) return res.status(413).json({ "status": "error", "msg": `${req.params.content} ${req.params.id} not found` })
-
-  return res.status(200).json({"status": "ok", "files": req.files.map((file) => { return file.path }) })
+  // respond with html or json
+  if (req.query.respond) {
+    res.redirect(req.query.respond === "page" ? path.join("/edit", docs.url) : path.join("/articles/edit", docs.slug))
+  } else {
+    if (docs === null) return res.status(413).json({ "status": "error", "msg": `${req.params.content} ${req.params.id} not found` })
+    return res.status(200).json({"status": "ok", "files": req.files.map((file) => { return file.path }) })
+  }
 })
 
 export default router

@@ -1,0 +1,19 @@
+<section class="attachments edit">
+  <ul>
+    {{#each content.attachments }}
+    <li>
+      <figure>
+        <div><img src="/attachments/thumbnail/{{ this }}"></div>
+        <figcaption>{{ this }}</figcaption>
+      </figure>
+    </li>
+    {{/each }}
+  </ul>
+  <form action="/attachments/page/{{ content._id }}?respond=page" enctype="multipart/form-data" method="post">
+    <fieldset>
+      <label for="files">{{ __ "files" }}</label>
+      <input id="files" name="files" type="file" accept="image/*, application/pdf" multiple></input>
+      <button name="submit" type="submit">{{ __ "upload" }}</button>
+    </fieldset>
+  </form>
+</section>

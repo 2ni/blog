@@ -1,5 +1,4 @@
 <section class="edit">
-  <pre class="debug">{{ json content }}</pre>
   <h1>{{__ "edit article"}}</h1>
   <form action="/articles/{{ content._id }}?_method=put" method="post">
     {{> articleForm }}
@@ -8,3 +7,4 @@
     <button name="delete" type="submit">{{ __ "delete" }}</button>
   <form>
 </section>
+<pre class="debug">{{ json content }}</pre>

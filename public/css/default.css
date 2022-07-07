@@ -25,12 +25,18 @@ button, select {
 /******************************* */
 /* navigation                    */
 /******************************* */
-nav ul {
+nav.main ul {
   background: #b3c8dd;
+}
+
+nav.admin ul {
+  background: #D7DE9E;
+}
+
+nav ul {
   display: flex;
   align-items: center;
   list-style: none;
-  margin: 0;
   padding: 0 .5rem;
   justify-content: space-between;
 }
@@ -55,18 +61,17 @@ nav li.search input {
   width: 20rem;
 }
 
-nav ul.admin {
-  background: #D7DE9E;
+nav.admin ul {
   justify-content: unset;
   font-size: .8rem;
 }
 
-nav ul.admin a {
+nav.admin ul a {
   color: #000;
   padding: .2rem;
 }
 
-nav ul.admin a:hover {
+nav.admin ul a:hover {
   background: #BEC48B;
 }
 
@@ -81,6 +86,13 @@ nav ul li:first-child a {
   margin: 0 .5rem;
 }
 
+article,
+section,
+nav ul {
+  margin: 0 auto;
+  max-width: 70rem;
+}
+
 /******************************* */
 /* article, page                 */
 /******************************* */
@@ -93,7 +105,8 @@ nav ul li:first-child a {
 }
 
 .container section.articles header time,
-.container article header time {
+.container article header time,
+.container section.attachments figcaption {
   font-size: .8rem;
   color: #4C555E;
 }
@@ -102,7 +115,8 @@ nav ul li:first-child a {
   margin: 0;
 }
 
-.container  section.articles ul {
+.container  section.articles ul,
+.container section.attachments ul {
   display: flex;
   list-style: none;
   padding: 0;
@@ -135,6 +149,26 @@ nav ul li:first-child a {
 .container section.articles li header {
   margin-bottom: 1rem;
 }
+
+.container section.attachments figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  height: 100%;
+}
+
+.container section.attachments figcaption {
+  margin-top: auto;
+}
+
+.container section.attachments li {
+  border: 1px solid black;
+  width: 20rem;
+  margin-right: .5rem;
+  margin-bottom: .5rem;
+}
+
 
 /******************************* */
 /* edit                          */

@@ -1,5 +1,6 @@
 import mongoose from "mongoose"
 import { marked } from "marked"
+import path from "path"
 
 import createDomPurify from "dompurify"
 import { JSDOM } from "jsdom"
@@ -7,6 +8,12 @@ const domPurify = createDomPurify(new JSDOM("").window)
 
 const allowedAttributes = [ "width", "height" ]
 
+/*
+ * ![alt](dc58642af14354ad5eb8cfd41ef6f26a-1---mppt-board-schematic.png|width=200)
+ * ![alt](7ba3f7f8d982ebaf52693b3127583df9-2ni-southpark-avatar-r.jpg|thumbnail)
+ * TODO replace slug in article with url
+ * TODO format of markdown image [<name>|width=200,height=200,alt=xy,title=z,thumbnail]
+ */
 const descriptionList = {
   name: "descriptionList",
   level: "inline",
@@ -23,11 +30,11 @@ const descriptionList = {
       */
 
       const attributes = (match[3] || "").replace(/\s*/g, "").split(",")
-      let attributesValid = []
+      let validatedAttributes = []
       attributes.forEach((attribute) => {
         const [k, v] = attribute.split("=")
         if (allowedAttributes.indexOf(k) !== -1) {
-          attributesValid.push(k + "=\"" + v + "\"")
+          validatedAttributes.push(k + "=\"" + v + "\"")
         }
       })
       const token = {
@@ -35,17 +42,20 @@ const descriptionList = {
         raw: match[0],
         alt: match[1],
         src: match[2],
-        attributesValid: attributesValid,
+        validatedAttributes: validatedAttributes,
         thumbnail: attributes[0] === "thumbnail",
       };
       return token
     }
   },
   renderer(token) {
+    const img = `<img ${token.validatedAttributes.join(" ")} title="${token.alt}" alt="${token.alt}" src="{src}">`
+    let src = path.join("/attachments", token.src)
     if (token.thumbnail) {
-      return `<a href="/attachments/${token.src}"><img ${token.attributesValid.join(" ")} alt="${token.alt}" src="/attachments/thumbnail/${token.src}"></a>`
+      src = path.join("/attachments/thumbnail/", token.src)
+      return `<a href="/attachments/${token.src}">${img.replace("{src}", src)}</a>`
     } else {
-      return `<img ${token.attributesValid.join(" ")} alt="${token.alt}" src="/attachments/${token.src}">`
+      return img.replace("{src}", src)
     }
   }
 }
