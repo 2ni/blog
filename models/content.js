@@ -6,20 +6,19 @@ import createDomPurify from "dompurify"
 import { JSDOM } from "jsdom"
 const domPurify = createDomPurify(new JSDOM("").window)
 
-const allowedAttributes = [ "width", "height" ]
+const allowedAttributes = [ "width", "height", "alt", "title" ]
 
 /*
- * ![alt](dc58642af14354ad5eb8cfd41ef6f26a-1---mppt-board-schematic.png|width=200)
- * ![alt](7ba3f7f8d982ebaf52693b3127583df9-2ni-southpark-avatar-r.jpg|thumbnail)
+ * !dc58642af14354ad5eb8cfd41ef6f26a-1---mppt-board-schematic.png|width=200!
+ * !7ba3f7f8d982ebaf52693b3127583df9-2ni-southpark-avatar-r.jpg|thumbnail,alt="some alt",title=some title!
  * TODO replace slug in article with url
- * TODO format of markdown image [<name>|width=200,height=200,alt=xy,title=z,thumbnail]
  */
 const descriptionList = {
   name: "descriptionList",
   level: "inline",
-  start(src) { return src.match(/!\[[^\]]*\]\([^)]*\)/)?.index; }, // [anchor](url)
+  start(src) { return src.match(/![^()|!]*!/)?.index; }, // !filename!
   tokenizer(src, tokens) {
-    const rule = /^!\[([^\]]*)\]\(([^)|]*)\|?([^)]*)?\)/
+    const rule = /^!([^|!]*)\|?([^!]*)?!/
     const match = rule.exec(src)
     if (match) {
       /*
@@ -29,19 +28,19 @@ const descriptionList = {
       })
       */
 
-      const attributes = (match[3] || "").replace(/\s*/g, "").split(",")
+      const attributes = (match[2] || "").replace(/\s*([,=])\s*/g, "$1").split(",")
       let validatedAttributes = []
       attributes.forEach((attribute) => {
         const [k, v] = attribute.split("=")
         if (allowedAttributes.indexOf(k) !== -1) {
-          validatedAttributes.push(k + "=\"" + v + "\"")
+          validatedAttributes[k] = v
         }
       })
+      if (!validatedAttributes["title"] && validatedAttributes["alt"]) validatedAttributes["title"] = validatedAttributes["alt"]
       const token = {
         type: "descriptionList",
         raw: match[0],
-        alt: match[1],
-        src: match[2],
+        src: match[1],
         validatedAttributes: validatedAttributes,
         thumbnail: attributes[0] === "thumbnail",
       };
@@ -49,7 +48,8 @@ const descriptionList = {
     }
   },
   renderer(token) {
-    const img = `<img ${token.validatedAttributes.join(" ")} title="${token.alt}" alt="${token.alt}" src="{src}">`
+    const validatedAttributesStr = Object.keys(token.validatedAttributes).map(k => { return `${k}="${token.validatedAttributes[k]}"` }).join(" ")
+    const img = `<img ${validatedAttributesStr} src="{src}">`
     let src = path.join("/attachments", token.src)
     if (token.thumbnail) {
       src = path.join("/attachments/thumbnail/", token.src)
