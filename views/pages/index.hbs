@@ -3,7 +3,7 @@
 <ul>
   {{#each contents}}
   <li>
-    <h4><a href="/pagess/{{ this.slug }}">{{ this.title }}</a></h4>
+    <h4><a href="{{ this.url }}">{{ this.title }}</a></h4>
     <div class="subtitle">{{formatDate this.createdAt}}</div>
   </li>
   {{/each}}

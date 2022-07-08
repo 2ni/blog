@@ -7,11 +7,6 @@ pageSchema.add({
   title: {
     type: String,
   },
-  url: {
-    type: String,
-    required: true,
-    unique: true,
-  },
 })
 
 const pages = mongoose.model("Pages", pageSchema)

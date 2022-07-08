@@ -22,4 +22,16 @@ alias mongod-stop='brew services stop mongodb-community'
 ```
 npm run dev
 ```
-
+### mongodb shell commands
+```
+select blog
+db.pages.find({}, { "title": 1, "url": 1, "attachments": 1, "markdown": 1 })
+db.pages.update({_id: ObjectId("62b6ffac2fff4a4a4845ac5b")}, { $set : {"attachments": [] }}, { multi: true})
+db.pages.find({_id: ObjectId("62b6ffac2fff4a4a4845ac5b")})
+db.sitemaps.drop()
+db.showIndexes()
+show collections
+db.pages.deleteMany({})
+db.pages.dropIndex("_id_")
+db.dropDatabase()
+```

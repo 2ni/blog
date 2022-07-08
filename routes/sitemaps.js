@@ -21,6 +21,11 @@ function saveAndRedirect() {
   return async (req, res) => {
     let sitemaps = req.sitemaps
     sitemaps.content = []
+    if (!Array.isArray(req.body["name[]"])) {
+      req.body["name[]"] = [ req.body["name[]"] ]
+      req.body["url[]"] = [ req.body["url[]"] ]
+    }
+
     req.body["name[]"].forEach((name, index) => {
       if (name && (!req.params.index || index != req.params.index)) {
         let sitemap = { name: name, url: req.body["url[]"][index] }

@@ -2,7 +2,7 @@
 <ul>
   {{#each contents}}
   <li>
-    <a href="/articles/{{ this.slug }}">
+    <a href="{{ this.url }}">
       <header>
         <h4>{{ this.title }}</h4>
         <time datetime="{{ formatDate this.createdAt showTime=true }}">{{formatDate this.createdAt}}</time>

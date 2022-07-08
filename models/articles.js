@@ -1,17 +1,13 @@
 import mongoose from "mongoose"
 import slugify from "slugify"
 import contentSchema from "./content.js"
+import path from "path"
 
 const articleSchema = contentSchema.clone()
 articleSchema.add({
   title: {
     type: String,
     required: true,
-  },
-  slug: {
-    type: String,
-    required: true,
-    unique: true,
   },
   description: {
     type: String,
@@ -20,7 +16,7 @@ articleSchema.add({
 
 articleSchema.pre("validate", function(next) {
   if (this.title) {
-    this.slug = slugify(this.title, { lower: true, strict: true })
+    this.url = path.join("/articles", slugify(this.title, { lower: true, strict: true }))
   }
   next()
 })

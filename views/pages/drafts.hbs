@@ -1,9 +1,15 @@
-<h1>{{ __ "drafts" }}</h1>
-<ul>
-  {{#each contents}}
-  <li>
-    <h4><a href="/pages/edit/{{ this._id }}">{{#if this.title }} {{ this.title}} {{else}} index {{/if }}</a></h4>
-    <div class="subtitle">{{formatDate this.createdAt}}</div>
-  </li>
-  {{/each}}
-</ul>
+<section class="articles">
+  <h1>{{ __ "page drafts" }}</h1>
+  <ul>
+    {{#each contents}}
+    <li>
+      <a href="{{ this.url }}/edit">
+        <header>
+          <h4>{{#if this.title }} {{ this.title}} {{else}} index {{/if }}</h4>
+          <time datetime="{{ formatDate this.createdAt showTime=true }}">{{ formatDate this.createdAt}}</time>
+        </header>
+      </a>
+    </li>
+    {{/each}}
+  </ul>
+</section>

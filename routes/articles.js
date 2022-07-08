@@ -50,14 +50,19 @@ router.get("/new", (req, res) => {
 })
 
 router.get("/:slug/edit", async (req, res) => {
-  const article = await db.articles.findOne({ slug: req.params.slug }).lean()
-  res.render("articles/edit", { content: article, edit: path.join("/articles", article.slug, "edit") })
+  const url = path.join("/articles", req.params.slug)
+  const article = await db.articles.findOne({ url: url }).lean()
+  res.render("articles/edit", { content: article, edit: path.join(url, "edit") })
 })
 
 router.get("/:slug", async (req, res) => {
-  const article = await db.articles.findOne({ slug: req.params.slug }).lean()
-  if (article === null) res.redirect("/")
-  res.render("articles/show", { content: article, edit: path.join("/articles", article.slug, "edit") })
+  const url = path.join("/articles", req.params.slug)
+  const article = await db.articles.findOne({ url: url, status: "published" }).lean()
+  if (article === null) {
+    res.status(404).render("404")
+  } else {
+    res.render("articles/show", { content: article, edit: path.join(url, "edit") })
+  }
 })
 
 router.post("/", async (req, res, next) => {
@@ -85,7 +90,7 @@ function saveAndRedirect(path) {
 
     try {
       article = await article.save()
-      res.redirect(`/articles/${article.slug}`)
+      res.redirect(article.url)
     } catch (e) {
       console.log(e)
       res.render(`articles/${path}`, { content: article })

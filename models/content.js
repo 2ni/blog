@@ -74,6 +74,11 @@ const contentSchema = new mongoose.Schema({
     enum: { values: [ "draft", "published" ], message: "{VALUE} is not supported" },
     default: "draft",
   },
+  url: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   markdown: {
     type: String,
   },
