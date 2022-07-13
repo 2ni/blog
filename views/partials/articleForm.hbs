@@ -12,6 +12,17 @@
   </select>
 </fieldset>
 <fieldset>
+  <label for="category">{{ __ "category" }}</label>
+  <select name="category" id="category">
+    <option value=""></option>
+    {{# select content.category }}
+    {{#each categories }}
+    <option value="{{ this._id }}">{{ this.name }}</option>
+    {{/each }}
+    {{/ select }}
+  </select>
+</fieldset>
+<fieldset>
   <label for="description">{{ __ "description" }}</label>
   <textarea type="text" name="description" id="description">{{ content.description }}</textarea>
 </fieldset>

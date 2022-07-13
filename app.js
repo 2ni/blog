@@ -6,6 +6,7 @@ import { engine } from "express-handlebars"
 import i18n from "i18n"
 import os from "os"
 import path from "path"
+import cookieParser from "cookie-parser"
 import methodOverride from "method-override"
 import { fileURLToPath } from "url"
 import { dirname } from "path"
@@ -19,6 +20,7 @@ import articleRoutes from "./routes/articles.js"
 import pageRoutes from "./routes/pages.js"
 import attachmentRoutes from "./routes/attachments.js"
 import sitemapsRoutes from "./routes/sitemaps.js"
+import categoriesRoutes from "./routes/categories.js"
 
 import db from "./models/app.js"
 process.stdout.write("waiting for DB...")
@@ -46,6 +48,7 @@ db.mongoose.connection.once("open", async () => {
 const app = express()
 app.use(methodOverride("_method"))
 app.use("/", express.static("public"))
+app.use(cookieParser())
 app.engine(".hbs", engine({ extname: ".hbs", helpers: handlebarsHelpers, partialsDir: "views/partials", defaultLayout: "default" }))
 app.set("view engine", ".hbs")
 app.set("views", "./views")
@@ -61,14 +64,18 @@ i18n.configure({
 })
 app.use(i18n.init)
 
-// middleware to set language depending on url
+// middleware to set general things such as language depending on url
 // https://stackoverflow.com/questions/19539332/localization-nodejs-i18n
+const allowedRoles = [ "admin" ]
 app.use(async (req, res, next) => {
-  // console.log("ip", req.socket.remoteAddress)
   res.setLocale("de")
   req.setLocale("de")
 
   res.locals.sitemaps = await db.sitemaps.findOne().lean()
+
+  if (req.cookies.role && allowedRoles.indexOf(req.cookies.role) !== -1) {
+    res.locals.role = req.cookies.role
+  }
 
   next()
 })
@@ -82,6 +89,7 @@ app.use("/articles", articleRoutes)
 app.use("/pages", pageRoutes)
 app.use("/attachments", attachmentRoutes)
 app.use("/sitemaps", sitemapsRoutes)
+app.use("/categories", categoriesRoutes)
 
 app.get("/", async (req, res) => {
   /*

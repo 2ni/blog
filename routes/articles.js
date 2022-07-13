@@ -2,6 +2,7 @@ import express from "express"
 const router = express.Router()
 import db from "../models/app.js"
 import path from "path"
+import { authorize } from "../middleware/auth.js"
 
 router.get("/:page([0-9]+)?/:limit([0-9]+)?", async (req, res) => {
   // console.log(res.__("hello"), res.getLocale(), res.getLocales())
@@ -31,13 +32,12 @@ router.get("/:page([0-9]+)?/:limit([0-9]+)?", async (req, res) => {
     ...next,
     ...previous,
     ...{
-      title: "Articles",
       contents: articles,
     }
   })
 })
 
-router.get("/drafts", async (req, res) => {
+router.get("/drafts", authorize, async (req, res) => {
   const articles = await db.articles.find({ status: "draft" }).sort({ createdAt: "desc" }).lean()
   res.render("articles/drafts", {
     title: "Articles",
@@ -45,14 +45,16 @@ router.get("/drafts", async (req, res) => {
   })
 })
 
-router.get("/new", (req, res) => {
-  res.render("articles/new")
+router.get("/new", authorize, async (req, res) => {
+  const categories = await db.categories.find().sort({ name: "asc" }).lean()
+  res.render("articles/new", { categories: categories })
 })
 
-router.get("/:slug/edit", async (req, res) => {
+router.get("/:slug/edit", authorize, async (req, res) => {
   const url = path.join("/articles", req.params.slug)
   const article = await db.articles.findOne({ url: url }).lean()
-  res.render("articles/edit", { content: article, edit: path.join(url, "edit") })
+  const categories = await db.categories.find().sort({ name: "asc" }).lean()
+  res.render("articles/edit", { content: article, categories: categories, edit: path.join(url, "edit") })
 })
 
 router.get("/:slug", async (req, res) => {
@@ -65,17 +67,17 @@ router.get("/:slug", async (req, res) => {
   }
 })
 
-router.post("/", async (req, res, next) => {
+router.post("/", authorize, async (req, res, next) => {
   req.article = new db.articles()
   next()
 }, saveAndRedirect("new"))
 
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", authorize, async (req, res, next) => {
   req.article = await db.articles.findById(req.params.id)
   next()
 }, saveAndRedirect("edit"))
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authorize, async (req, res) => {
   await db.articles.findByIdAndDelete(req.params.id)
   res.redirect("/")
 })
@@ -87,6 +89,7 @@ function saveAndRedirect(path) {
     article.title = req.body.title
     article.description = req.body.description
     article.markdown = req.body.markdown.replace(/\n/g, "")
+    article.category = req.body.category || null
 
     try {
       article = await article.save()

@@ -37,7 +37,6 @@ nav ul {
   display: flex;
   align-items: center;
   list-style: none;
-  padding: 0 .5rem;
   justify-content: space-between;
 }
 
@@ -82,8 +81,8 @@ nav ul li:first-child a {
 /******************************* */
 /* container                     */
 /******************************* */
-.container {
-  margin: 0 .5rem;
+.container, nav ul {
+  padding: 0 .5rem;
 }
 
 article,
@@ -91,6 +90,7 @@ section,
 nav ul {
   margin: 0 auto;
   max-width: 70rem;
+  box-sizing: border-box;
 }
 
 /******************************* */
@@ -104,6 +104,10 @@ nav ul {
   max-width: 100%;
 }
 
+.container section.articles {
+  padding: 0;
+}
+
 .container section.articles header time,
 .container article header time,
 .container section.attachments figcaption {
@@ -111,8 +115,18 @@ nav ul {
   color: #4C555E;
 }
 
+.container section.articles header .category {
+  font-size: .8rem;
+  margin-left: auto;
+  margin-right: .5rem;
+}
+
 .container section.articles h4 {
   margin: 0;
+}
+
+.container  section.articles ul {
+  flex-direction: column;
 }
 
 .container  section.articles ul,
@@ -124,30 +138,29 @@ nav ul {
 }
 
 .container section.articles li {
-  background: #DECEB4;
-  margin-right: .5rem;
-  margin-bottom: .5rem;
-  width: 20rem;
-  height: 10rem;
 }
 
 .container section.articles li a {
   text-decoration: none;
-  padding: .5rem;
-  height: 100%;
-  width: 100%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   color: #000;
+  border: 1px solid #fff;
 }
 
 .container section.articles li a:hover {
-  border: 1px solid black;
+  border: 1px solid #000;
 }
 
 .container section.articles li header {
-  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.container section.articles .description {
+  display: none;
 }
 
 .container section.attachments figure {

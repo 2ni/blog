@@ -32,5 +32,9 @@
   "edit sitemaps": "Sitemaps",
   "name": "Name",
   "files": "files",
-  "upload": "upload"
+  "upload": "upload",
+  "categories": "categories",
+  "category": "category",
+  "edit category": "edit category",
+  "new category": "new category"
 }

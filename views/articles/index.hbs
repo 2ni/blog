@@ -5,6 +5,7 @@
     <a href="{{ this.url }}">
       <header>
         <h4>{{ this.title }}</h4>
+        <div class="category">{{ this.categoryName }}</div>
         <time datetime="{{ formatDate this.createdAt showTime=true }}">{{formatDate this.createdAt}}</time>
       </header>
       <div class="description">{{ this.description }}</div>

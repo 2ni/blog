@@ -1,0 +1,10 @@
+<section class="edit">
+  <h1>{{__ "edit category"}}</h1>
+  <form action="/categories/{{ category._id }}?_method=put" method="post">
+    {{> categoryForm }}
+  </form>
+  <form action="/categories/{{ category._id }}?_method=delete" method="post">
+    <button name="delete" type="submit">{{ __ "delete" }}</button>
+  <form>
+</section>
+<pre class="debug">{{ json category }}</pre>

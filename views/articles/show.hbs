@@ -1,7 +1,11 @@
 <article class="article">
   <header>
     <h1>{{ content.title }}</h1>
-    <time class="createdAt" datetime="{{ formatDate content.createdAt showTime=true }}">{{ formatDate content.createdAt }}</time>
+    <time class="createdAt" datetime="{{ formatDate content.updatedAt showTime=true }}">
+      {{#if (eq formatDate content.createdAt formatDate content.updatedAt) }}
+      {{else }}
+      last update {{ formatDate content.updatedAt }} ({{/if }}created {{ formatDate content.createdAt }})
+    </time>
   </header>
   <div>{{{ content.sanitizedHtml }}}</div>
 </article>
