@@ -11,7 +11,6 @@ const allowedAttributes = [ "width", "height", "alt", "title" ]
 /*
  * !dc58642af14354ad5eb8cfd41ef6f26a-1---mppt-board-schematic.png|width=200!
  * !7ba3f7f8d982ebaf52693b3127583df9-2ni-southpark-avatar-r.jpg|thumbnail,alt="some alt",title=some title!
- * TODO add categories
  * TODO minify css, js
  * TODO search
  * TODO use <picture> for muliple image sizes

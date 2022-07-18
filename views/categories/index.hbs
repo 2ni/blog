@@ -3,11 +3,11 @@
   <ul>
     {{#each categories }}
     <li>
-      <a href="{{ this.url }}/edit">
+      {{#if (eq ../role "admin") }}<a class="edit" href="{{ this.url }}/edit">&#x270E</a>{{/if}}
+      <a href="{{ this.url }}">
         <header>
           <h4>{{ this.name }}</h4>
           <div class="category">{{ this.count }}</div>
-          <time datetime="{{ formatDate this.createdAt showTime=true }}">{{ formatDate this.createdAt}}</time>
         </header>
       </a>
     </li>

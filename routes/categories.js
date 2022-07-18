@@ -4,7 +4,7 @@ import db from "../models/app.js"
 import path from "path"
 import { authorize } from "../middleware/auth.js"
 
-router.get("/", authorize, async (req, res) => {
+router.get("/", async (req, res) => {
   const categories = await db.categories.find().sort({ name: "desc" }).lean()
   res.render("categories/index", { categories: categories })
 })
