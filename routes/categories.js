@@ -9,25 +9,25 @@ router.get("/", async (req, res) => {
   res.render("categories/index", { categories: categories })
 })
 
+router.get("/new", authorize, async (req, res) => {
+  res.render("categories/new")
+})
+
 router.get("/:categoryName", async (req, res) => {
   // check if category exists
   if ((await db.categories.find({ categoryName: req.params.categoryName })).length === 0) {
     return res.render("404")
   }
 
+  // TODO add paging
   const articles = await db.articles.find({ status: "published", categoryName: req.params.categoryName }).sort({ createdAt: "desc" }).lean()
-  console.log("articles", articles)
-  res.render("articles/index", { contents: articles })
+  res.render("articles/index", { contents: articles, edit: path.join("/categories", req.params.categoryName, "edit") })
 })
 
 router.get("/:slug/edit", authorize, async (req, res) => {
   const url = path.join("/categories", req.params.slug)
   const category = await db.categories.findOne({ url: url }).lean()
   res.render("categories/edit", { category: category, edit: path.join(url, "edit") })
-})
-
-router.get("/new", authorize, async (req, res) => {
-  res.render("categories/new")
 })
 
 router.post("/", authorize, async (req, res, next) => {
