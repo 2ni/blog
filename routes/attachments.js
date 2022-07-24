@@ -62,6 +62,10 @@ const uploadAttachments = async (req, res, next) => {
   })
 }
 
+const getFnBySize = (filename, size) => {
+  return filename.replace(/(\.[^.]*)$/, "." + size + "$1")
+}
+
 const resizeAttachments = async (req, res, next) => {
   if (!req.files) return next()
 
@@ -69,7 +73,7 @@ const resizeAttachments = async (req, res, next) => {
     req.files.map((file) => {
       sharp(file.path, { failOnError: false })
         .resize(200, 200, { fit: "inside" })
-        .toFile(file.path.replace(/(\.[^.]*)$/, ".thumbnail$1"), (err, info) => {
+        .toFile(getFnBySize(file.path, "thumbnail"), (err, info) => {
           if (err) console.log("res", err)
         })
     })
@@ -93,12 +97,23 @@ const validateRequest = async (req, res, next) => {
  * http://localhost:3001/attachments/c1cb20f5151f9482c7562a2c551f38b5-image.png
  * http -bf get :3001/attachments/c1cb20f5151f9482c7562a2c551f38b5-image.png
  */
-router.get("/:size?/:filename", (req, res) => {
+const allowedImageSizes = [ 640, 768, 1024, 1600, 1920 ]
+router.get("/:size?/:filename", async (req, res) => {
+  const sizeInt = Number(req.params.size)
+  const sizeStr = req.params.size
   let fn = path.join(baseStoragePath, splitImagePath(req.params.filename))
-  if (req.params.size === "thumbnail") {
-    fn = path.join(fn, req.params.filename.replace(/(\.[^.]*)$/, ".thumbnail$1"))
-  } else if (!req.params.size) {
+  if (sizeStr === "thumbnail") {
+    fn = path.join(fn, getFnBySize(req.params.filename, "thumbnail"))
+  } else if (!sizeStr) {
     fn = path.join(fn, req.params.filename)
+  } else if (allowedImageSizes.indexOf(sizeInt) !== -1) {
+    fn = path.join(fn, getFnBySize(req.params.filename, sizeStr))
+    if (!fs.existsSync(fn)) {
+      // TODO avoid updscaling?
+      const newfile = await sharp(fn.replace(/\.[^.]*\.([^.]*)$/, ".$1"), { failOnError: false })
+      await newfile.resize(sizeInt, sizeInt, { fit: "inside" })
+      await newfile.toFile(fn)
+    }
   } else {
     return res.sendStatus(400)
   }
