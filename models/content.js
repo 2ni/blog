@@ -1,6 +1,8 @@
 import mongoose from "mongoose"
 import { marked } from "marked"
 import path from "path"
+import { getImageFn } from "../helpers/utils.js"
+import  { config } from  "../config/app.js"
 
 import createDomPurify from "dompurify"
 import { JSDOM } from "jsdom"
@@ -16,8 +18,8 @@ const allowedAttributes = [ "width", "height", "alt", "title" ]
  * (https://stackoverflow.com/questions/70865639/how-to-install-nanoid-in-nodejs)
  * TODO optimise image generation (thumbnail or more)
  * TODO search
- * TODO use <picture> for muliple image sizes
  * TODO authorization
+ * TODO check if alt, title, caption is secured/escaped
  */
 const descriptionList = {
   name: "descriptionList",
@@ -48,20 +50,41 @@ const descriptionList = {
         raw: match[0],
         src: match[1],
         validatedAttributes: validatedAttributes,
-        thumbnail: attributes[0] === "thumbnail",
+        attributes: attributes,
       };
       return token
     }
   },
   renderer(token) {
     const validatedAttributesStr = Object.keys(token.validatedAttributes).map(k => { return `${k}="${token.validatedAttributes[k]}"` }).join(" ")
+    const attributes = token.attributes.reduce((ac,a) => (ac[a.split("=")[0]] = a.split("=")[1], ac), {})
     const img = `<img ${validatedAttributesStr} src="{src}">`
-    let src = path.join("/attachments", token.src)
-    if (token.thumbnail) {
-      src = path.join("/attachments/thumbnail/", token.src)
-      return `<a href="/attachments/${token.src}">${img.replace("{src}", src)}</a>`
+    const detailUrl = path.join("/attachments/show", token.src)
+    let src = "/attachments"
+    if (token.validatedAttributes.width) {
+      const availableWidth = config.allowedImageSizes.filter((num) => { return num > token.validatedAttributes.width })[0]
+      return `<a href="${detailUrl}">${img.replace("{src}", path.join(src, String(availableWidth), token.src))}</a>`
+    }
+    else if (attributes.size === "thumbnail") {
+      src = path.join(src, "thumbnail", token.src)
+      return `<a href="${detailUrl}">${img.replace("{src}", src)}</a>`
     } else {
-      return img.replace("{src}", src)
+      // 1rem = 16px
+      // return `<img srcset="${path.join(src, '320', token.src)} 320w, ${path.join(src, '640', token.src)} 640w, ${path.join(src, '768', token.src)} 768w, ${path.join(src, '1024', token.src)} 1024w" src="${path.join(src, "thumbnail", token.src)}">`
+
+      let sizes = config.allowedImageSizes
+      let offset = 0
+      if (attributes.size === "medium") {
+        offset = 2
+        sizes = config.allowedImageSizes.slice(offset)
+      }
+      let sources = ""
+      const cssClass = attributes.size ? attributes.size : "large"
+      for (const [i, width] of sizes.entries()) {
+        sources += `<source media="(min-width:${config.allowedImageSizes[i+offset]/16}rem)" srcset="${path.join(src, String(width), token.src)}">`
+      }
+      const picture = `<a href="${detailUrl}"><picture class="${cssClass}">${sources}${img.replace("{src}", path.join(src, 'thumbnail', token.src))}</picture></a>`
+      return attributes.caption ? `<figure class="${cssClass}">${picture}<figcaption>${attributes.caption}</figcaption></figure>` : picture
     }
   }
 }

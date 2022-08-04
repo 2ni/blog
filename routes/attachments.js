@@ -7,7 +7,8 @@ import crypto from "crypto"
 import sharp from "sharp"
 const router = express.Router()
 import db from "../models/app.js"
-import { splitImagePath } from "../helpers/utils.js"
+import { getImageFn, splitImagePath } from "../helpers/utils.js"
+import  { config } from  "../config/app.js"
 
 const mime_map = {
   "image/png": "png",
@@ -44,7 +45,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 1*1024*1024 }, // 1MB
+  limits: { fileSize: 5*1024*1024 }, // 5MB
   fileFilter: (req, file, cb) => {
     if (mime_map[file.mimetype]) {
       cb(null, true)
@@ -62,10 +63,6 @@ const uploadAttachments = async (req, res, next) => {
   })
 }
 
-const getFnBySize = (filename, size) => {
-  return filename.replace(/(\.[^.]*)$/, "." + size + "$1")
-}
-
 const resizeAttachments = async (req, res, next) => {
   if (!req.files) return next()
 
@@ -73,7 +70,7 @@ const resizeAttachments = async (req, res, next) => {
     req.files.map((file) => {
       sharp(file.path, { failOnError: false })
         .resize(200, 200, { fit: "inside" })
-        .toFile(getFnBySize(file.path, "thumbnail"), (err, info) => {
+        .toFile(getImageFn(file.path, "thumbnail"), (err, info) => {
           if (err) console.log("res", err)
         })
     })
@@ -92,26 +89,33 @@ const validateRequest = async (req, res, next) => {
   next()
 }
 
+router.get("/show/:filename", async (req, res) => {
+  if (!fs.existsSync(path.join(baseStoragePath, splitImagePath(req.params.filename), req.params.filename))) {
+    return res.render("404")
+  }
+
+  res.render("attachments/show", { data: { filename: req.params.filename, sizes: config.allowedImageSizes } })
+})
+
 /*
  * see https://stackoverflow.com/questions/17515699/node-express-sending-image-files-as-api-response#answer-56873042
  * http://localhost:3001/attachments/c1cb20f5151f9482c7562a2c551f38b5-image.png
  * http -bf get :3001/attachments/c1cb20f5151f9482c7562a2c551f38b5-image.png
+ * http -bf get :3001/attachments/1024/7ba3f7f8d982ebaf52693b3127583df9-2ni-southpark-avatar-r.jpg
  */
-const allowedImageSizes = [ 640, 768, 1024, 1600, 1920 ]
 router.get("/:size?/:filename", async (req, res) => {
   const sizeInt = Number(req.params.size)
   const sizeStr = req.params.size
   let fn = path.join(baseStoragePath, splitImagePath(req.params.filename))
   if (sizeStr === "thumbnail") {
-    fn = path.join(fn, getFnBySize(req.params.filename, "thumbnail"))
+    fn = path.join(fn, getImageFn(req.params.filename, "thumbnail"))
   } else if (!sizeStr) {
     fn = path.join(fn, req.params.filename)
-  } else if (allowedImageSizes.indexOf(sizeInt) !== -1) {
-    fn = path.join(fn, getFnBySize(req.params.filename, sizeStr))
+  } else if (config.allowedImageSizes.indexOf(sizeInt) !== -1) {
+    fn = path.join(fn, getImageFn(req.params.filename, sizeStr))
     if (!fs.existsSync(fn)) {
-      // TODO avoid updscaling?
       const newfile = await sharp(fn.replace(/\.[^.]*\.([^.]*)$/, ".$1"), { failOnError: false })
-      await newfile.resize(sizeInt, sizeInt, { fit: "inside" })
+      await newfile.resize(sizeInt, sizeInt, { fit: "inside", withoutEnlargement: true }) // no upscaling -> same image with different names can happen
       await newfile.toFile(fn)
     }
   } else {

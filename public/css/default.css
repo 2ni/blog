@@ -81,16 +81,27 @@ nav ul li:first-child a {
 /******************************* */
 /* container                     */
 /******************************* */
-.container, nav ul {
+.container,
+nav ul {
   padding: 0 .5rem;
+}
+
+@media screen and (min-width: 1280px) {
+  .xcontainer {
+    padding: 0;
+  }
 }
 
 article,
 section,
 nav ul {
   margin: 0 auto;
-  max-width: 70rem;
+  max-width: 80rem;
   box-sizing: border-box;
+}
+
+nav ul {
+  max-width: 81rem;
 }
 
 /******************************* */
@@ -100,8 +111,29 @@ nav ul {
   margin-bottom: 0;
 }
 
+.container article picture {
+  display: block;
+  text-align: center;
+}
+
+.container article picture img {
+  width: 100%;
+}
+
+.container article picture.medium img {
+  width: 50%;
+}
+
 .container article img {
   max-width: 100%;
+}
+
+.container article figure.medium figcaption,
+.container article figure.full figcaption
+{
+  text-align: center;
+  font-size: .8rem;
+  color: #4C555E;
 }
 
 .container section.articles {

@@ -1,3 +1,10 @@
+### Coding Setup
+```
+mongod-local
+npm run dev
+mongosh
+```
+
 ### Installation
 ```
 npm init -y
