@@ -24,9 +24,10 @@ const allowedAttributes = [ "width", "height", "alt", "title" ]
 const descriptionList = {
   name: "descriptionList",
   level: "inline",
-  start(src) { return src.match(/![^()|!]*!/)?.index; }, // !filename!
+  start(src) { return src.match(/!.*(?<!\\)!/)?.index }, // !filename! ignoring escaped exclamation marks
   tokenizer(src, tokens) {
-    const rule = /^!([^|!]*)\|?([^!]*)?!/
+    // negative lookbehind to ignore "\!"
+    const rule = /^!([^|]*)\|?(.*)?(?<!\\)!/
     const match = rule.exec(src)
     if (match) {
       /*
@@ -36,7 +37,9 @@ const descriptionList = {
       })
       */
 
-      const attributes = (match[2] || "").replace(/\s*([,=])\s*/g, "$1").split(",")
+      // remove spaces before/after ,= if not escaped
+      // negative lookbehind to ignore "\," and "\="
+      const attributes = (match[2] || "").replace(/\s*((?<!\\)[,=])\s*/g, "$1").split(/(?<!\\),/).map(d=>d.replace(/\\/g, ""))
       let validatedAttributes = []
       attributes.forEach((attribute) => {
         const [k, v] = attribute.split("=")
