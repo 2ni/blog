@@ -45,13 +45,19 @@ db.mongoose.connection.once("open", async () => {
   }
 })
 
+console.log("dirname", __dirname)
 const app = express()
 app.use(methodOverride("_method"))
-app.use("/", express.static("public"))
+app.use("/", express.static(path.join(__dirname, "public")))
 app.use(cookieParser())
-app.engine(".hbs", engine({ extname: ".hbs", helpers: handlebarsHelpers, partialsDir: "views/partials", defaultLayout: "default" }))
+app.engine(".hbs", engine({
+  extname: ".hbs",
+  helpers: handlebarsHelpers,
+  partialsDir: path.join(__dirname, "views/partials"),
+  defaultLayout: "default"
+}))
 app.set("view engine", ".hbs")
-app.set("views", "./views")
+app.set("views", path.join(__dirname, "./views"))
 app.set("view options", { layout: "default" })
 
 i18n.configure({
