@@ -8,7 +8,7 @@ import createDomPurify from "dompurify"
 import { JSDOM } from "jsdom"
 const domPurify = createDomPurify(new JSDOM("").window)
 
-const allowedAttributes = [ "width", "height", "alt", "title" ]
+const allowedAttributes = [ "width", "height", "alt", "title", "id" ]
 
 /*
  * !dc58642af14354ad5eb8cfd41ef6f26a-1---mppt-board-schematic.png|width=200!
@@ -16,10 +16,9 @@ const allowedAttributes = [ "width", "height", "alt", "title" ]
  * TODO minify css, js -> minify html, js, css with https://github.com/srod/node-minify, rename js, css file with nanoid, replace in templates
  * parceljs.org
  * (https://stackoverflow.com/questions/70865639/how-to-install-nanoid-in-nodejs)
- * TODO optimise image generation (thumbnail or more)
- * TODO search
+ * TODO search (see https://stackoverflow.com/questions/44833817/mongodb-full-and-partial-text-search)
  * TODO authorization
- * TODO check if alt, title, caption is secured/escaped
+ * TODO indexes on mongodb
  */
 const descriptionList = {
   name: "descriptionList",
