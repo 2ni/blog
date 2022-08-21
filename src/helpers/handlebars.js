@@ -3,7 +3,7 @@ import { splitImagePath } from "../helpers/utils.js"
 const formatDate = (timestamp, options = {}) => {
   // return new Date(timestamp).toLocaleDateString()
   let dateString = new Date(timestamp).toISOString()
-  if (options.showTime || options.hash.showTime) dateString = dateString.split(".")[0].replace(/T/, " ")
+  if (options.showTime || options.hash && options.hash.showTime) dateString = dateString.split(".")[0].replace(/T/, " ")
   else dateString = dateString.split("T")[0]
 
   return dateString

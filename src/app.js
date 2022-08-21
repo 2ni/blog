@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import express from "express"
 import bodyParser from "body-parser"
 import helmet from "helmet"
@@ -48,7 +50,11 @@ db.mongoose.connection.once("open", async () => {
 console.log("dirname", __dirname)
 const app = express()
 app.use(methodOverride("_method"))
-app.use("/", express.static(path.join(__dirname, "public")))
+app.use("/", express.static(path.join(__dirname, "public"), {
+  setHeaders: (res, path) => {
+    // res.set("x-check", "test")
+  }
+}))
 app.use(cookieParser())
 app.engine(".hbs", engine({
   extname: ".hbs",
@@ -82,6 +88,7 @@ app.use(async (req, res, next) => {
   if (req.cookies.role && allowedRoles.indexOf(req.cookies.role) !== -1) {
     res.locals.role = req.cookies.role
   }
+  // res.set("x-check", "test")
 
   next()
 })
