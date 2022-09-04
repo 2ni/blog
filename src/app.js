@@ -15,7 +15,7 @@ import { dirname } from "path"
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-import  { config } from  "./config/app.js"
+import  { env, config } from  "./config/app.js"
 import * as handlebarsHelpers from "./helpers/handlebars.js"
 
 import articleRoutes from "./routes/articles.js"
@@ -47,11 +47,21 @@ db.mongoose.connection.once("open", async () => {
   }
 })
 
-console.log("dirname", __dirname)
 const app = express()
 app.use(methodOverride("_method"))
+/* caching, see https://simonhearne.com/2022/caching-header-best-practices/:
+ *   versioned files: Cache-Control: max-age=31536000, immutable
+ *   non versioned files: Cache-Control: max-age=604800, stale-while-revalidate=86400
+ *                        ETag: "<file-hash-generated-by-server>"
+ *   html files: Cache-Control: max-age:300, private
+ */
 app.use("/", express.static(path.join(__dirname, "public"), {
   setHeaders: (res, path) => {
+    if (env === "production") {
+      if (path.match(/\.css$/)) {
+        res.set("Cache-Control", "public, max-age=604800, immutable")
+      }
+    }
     // res.set("x-check", "test")
   }
 }))
@@ -90,6 +100,7 @@ app.use(async (req, res, next) => {
   }
   // res.set("x-check", "test")
 
+  res.set("Cache-Control", "max-age:300, private")
   next()
 })
 
@@ -141,5 +152,5 @@ app.listen(config.port, (err) => {
   }
 
   const now = handlebarsHelpers.formatDate(new Date(), { showTime: true })
-  console.log(`${now} server is listening on http://${os.hostname()}:${config.port}`)
+  console.log(`${now} server is listening on http://${os.hostname()}:${config.port} ${env}`)
 })

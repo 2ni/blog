@@ -89,6 +89,9 @@ const validateRequest = async (req, res, next) => {
   next()
 }
 
+/*
+ * webpage with the attachement
+ */
 router.get("/show/:filename", async (req, res) => {
   if (!fs.existsSync(path.join(baseStoragePath, splitImagePath(req.params.filename), req.params.filename))) {
     return res.render("404")
@@ -102,6 +105,8 @@ router.get("/show/:filename", async (req, res) => {
  * http://localhost:3001/attachments/c1cb20f5151f9482c7562a2c551f38b5-image.png
  * http -bf get :3001/attachments/c1cb20f5151f9482c7562a2c551f38b5-image.png
  * http -bf get :3001/attachments/1024/7ba3f7f8d982ebaf52693b3127583df9-2ni-southpark-avatar-r.jpg
+ *
+ * get file/attachment
  */
 router.get("/:size?/:filename", async (req, res) => {
   const sizeInt = Number(req.params.size)
@@ -123,6 +128,7 @@ router.get("/:size?/:filename", async (req, res) => {
   }
 
   res.contentType(req.params.filename)
+  res.set("Cache-Control", "public, max-age=604800, immutable")
   const r = fs.createReadStream(fn)
   const ps = new stream.PassThrough()
   stream.pipeline(r, ps, (err) => {
