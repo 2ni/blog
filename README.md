@@ -42,6 +42,14 @@ show collections
 db.pages.deleteMany({})
 db.pages.dropIndex("_id_")
 db.dropDatabase()
+
+db.articles.ensureIndex({ title: "text", markdown: "text" })  # create text index over title and content
+db.articles.ensureIndex({ title: "text", markdown: "text" }, { weights: { title: 10, markdown: 5 } })  # create text index over title and content
+db.articles.find({ $text: { $search: "\"article\"" } }, { score: { $meta: "textScore" } }).limit(2)
+.sort({ score: { $meta: "textScore" } } )
+
+db.articles.getIndexes()
+db.articles.dropIndex("title_text_description_text")
 ```
 
 ### Authentication

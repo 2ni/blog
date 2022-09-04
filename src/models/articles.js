@@ -47,5 +47,7 @@ articleSchema.pre("save", async function() {
   }
 })
 
+articleSchema.index({ title: "text", markdown: "text" })
+
 const articles = mongoose.model("Articles", articleSchema)
 export default articles

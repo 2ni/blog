@@ -8,13 +8,26 @@ router.get("/:page([0-9]+)?/:limit([0-9]+)?", async (req, res) => {
   // console.log(res.__("hello"), res.getLocale(), res.getLocales())
   // const page = parseInt(req.query.page) || 1
   // const limit = parseInt(req.query.limit) || 10
+  let q = req.query.q
   const page = parseInt(req.params.page) || 1
   const limit = parseInt(req.params.limit) || 10
   const startIndex = (page - 1) * limit
   const endIndex = page * limit
 
-  const articles = await db.articles.find({ status: "published" }).limit(limit).skip(startIndex).sort({ createdAt: "desc" }).lean()
-  if (!articles.length) {
+  if (q && (req.params.page || req.params.limit)) {
+    res.status(404)
+    return res.render("404")
+  }
+
+  let articles = null
+  if (q) {
+    if (!q.match(/"/)) q = q.split(/\s+/).map(kw => `"${kw}"`).join(' ')
+    articles = await db.articles.find({ status: "published", "$text": { "$search": q } }).limit(10).skip(startIndex).lean()
+  } else {
+    articles = await db.articles.find({ status: "published" }).limit(limit).skip(startIndex).sort({ createdAt: "desc" }).lean()
+  }
+
+  if (!articles.length && !q) {
     res.status(404)
     return res.render("404")
   }
