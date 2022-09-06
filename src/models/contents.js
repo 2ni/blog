@@ -3,6 +3,7 @@ import { marked } from "marked"
 import path from "path"
 import { getImageFn } from "../helpers/utils.js"
 import  { config } from  "../config/app.js"
+import db from "./app.js"
 
 import createDomPurify from "dompurify"
 import { JSDOM } from "jsdom"
@@ -11,9 +12,15 @@ const domPurify = createDomPurify(new JSDOM("").window)
 const allowedAttributes = [ "width", "height", "alt", "title", "id" ]
 
 /*
- * !dc58642af14354ad5eb8cfd41ef6f26a-1---mppt-board-schematic.png|width=200!
- * !7ba3f7f8d982ebaf52693b3127583df9-2ni-southpark-avatar-r.jpg|thumbnail,alt="some alt",title=some title!
- * TODO search (see https://stackoverflow.com/questions/44833817/mongodb-full-and-partial-text-search)
+ * Images
+ * !dc58642af14354ad5eb8cfd41ef6f26a-1---mppt-board-schematic.png|alt="Hello\!,width=600!
+ * !7ba3f7f8d982ebaf52693b3127583df9-2ni-southpark-avatar-r.jpg|size=thumbnail,alt=some alt!
+ * !2b2bbc2165ea321cd9d9b2d1b32be321-pxl_20220716_094446980.jpg|size=medium,caption=Wandern\, macht Lust\!,alt=some alt!
+ *
+ * Quotes
+ * > It's still magic even if you know how it's done
+ * > -- <cite>Terry Pratchett, A Hat Full of Sky</cite>
+ *
  * TODO authorization
  * TODO indexes on mongodb
  */
@@ -107,6 +114,10 @@ const contentSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  contentType: [ "article", "page" ],
+  title: {
+    type: String,
+  },
   markdown: {
     type: String,
   },
@@ -114,13 +125,43 @@ const contentSchema = new mongoose.Schema({
     type: String,
   },
   attachments: [String],
+  // avoid using real relations to avoid mongoose eg populating data in pre hooks
+  category: {
+    type: String,
+    // type: mongoose.Schema.Types.ObjectId,
+    // ref: "Categories",
+    set: function (category) {
+      this._previousCategory = this.category
+      return category
+    },
+  },
+  categoryName: String,
 }, { timestamps: true })
 
-contentSchema.pre("validate", function(next) {
+contentSchema.pre("validate", async function(next) {
   marked.setOptions({ headerIds: true })
   if (this.markdown) this.sanitizedHtml = domPurify.sanitize(marked(this.markdown))
+
+  // update categoryName
+  if (this.category) {
+    const category = await db.categories.findById(this.category).lean()
+    this.categoryName = category.name
+  } else {
+    this.categoryName = null
+  }
 
   next()
 })
 
-export default contentSchema
+contentSchema.pre("save", async function() {
+  // update category article count
+  if (this.isModified("category")) {
+    await db.categories.findOneAndUpdate({ _id: this.category }, { $inc: { "count": 1 }})
+    await db.categories.findOneAndUpdate({ _id: this._previousCategory }, { $inc: { "count": -1 }})
+  }
+})
+
+contentSchema.index({ title: "text", markdown: "text" })
+
+const contents = mongoose.model("Contents", contentSchema)
+export default contents

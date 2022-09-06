@@ -1,13 +1,11 @@
 import mongoose from "mongoose"
-import articles from "./articles.js"
-import pages from "./pages.js"
+import contents from "./contents.js"
 import sitemaps from "./sitemaps.js"
 import categories from "./categories.js"
 
 const db = {}
 db.mongoose = mongoose
-db.articles = articles
-db.pages = pages
+db.contents = contents
 db.sitemaps = sitemaps
 db.categories = categories
 

@@ -23,6 +23,7 @@ import pageRoutes from "./routes/pages.js"
 import attachmentRoutes from "./routes/attachments.js"
 import sitemapsRoutes from "./routes/sitemaps.js"
 import categoriesRoutes from "./routes/categories.js"
+import searchRoutes from "./routes/search.js"
 
 import db from "./models/app.js"
 process.stdout.write("waiting for DB...")
@@ -114,6 +115,7 @@ app.use("/pages", pageRoutes)
 app.use("/attachments", attachmentRoutes)
 app.use("/sitemaps", sitemapsRoutes)
 app.use("/categories", categoriesRoutes)
+app.use("/search", searchRoutes)
 
 app.get("/", async (req, res) => {
   /*
@@ -121,9 +123,9 @@ app.get("/", async (req, res) => {
   sitemaps.content = [{ name: "home", url: "/" }, { name: "articles", url: "/articles" }]
   await sitemaps.save()
   */
-  const page = await db.pages.findOne({ url: "/", status: "published" }).lean()
+  const page = await db.contents.findOne({ url: "/", status: "published" }).lean()
   if (page === null) {
-    const pages = await db.pages.find({ status: "published" }).lean()
+    const pages = await db.contents.find({ status: "published", contentType: "page" }).lean()
     res.render("index", { pages: pages, edit: "/edit" })
   }
   else res.render("pages/show", { content: page, edit: "/edit" })
@@ -131,16 +133,20 @@ app.get("/", async (req, res) => {
 
 app.get("*/edit$", async (req, res) => {
   if (req.params[0] === "") req.params[0] = "/"
-  const page = await db.pages.findOne({ url: req.params[0] }).lean()
-  res.render(path.join("pages", page ? "edit" : "new"), { content: page, edit: path.join(req.params[0], "edit") })
+  let page = await db.contents.findOne({ url: req.params[0] }).lean()
+  let newpage = page ? false : true
+  if (!page) {
+    newpage = true
+    page = { url: req.params[0] }
+  }
+  res.render(path.join("pages", newpage ? "new" : "edit"), { content: page, edit: path.join(req.params[0], "edit") })
 })
 
 app.get("*", async (req, res) => {
   // console.log(res.__("hello"), res.getLocale(), res.getLocales())
-  const page = await db.pages.findOne({ url: req.params[0], status: "published" }).lean()
+  const page = await db.contents.findOne({ url: req.params[0], status: "published" }).lean()
   if (page === null) {
-    res.status(404)
-    res.render("404")
+    res.status(404).render("404", { edit: path.join(req.params[0], "edit") })
   } else {
     res.render("pages/show", { content: page, edit: path.join(req.params[0], "edit") })
   }

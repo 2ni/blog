@@ -17,11 +17,11 @@
   "page": "Seite",
   "home": "Home",
   "article": "article",
-  "articles": "articles",
+  "articles": "Artikel",
   "pages": "pages",
   "new page": "Neue Seite",
-  "article drafts": "Artikel Entwürfe",
-  "page drafts": "Seiten Entwürfe",
+  "article drafts": "Entwürfe Artikel",
+  "page drafts": "Entwürfe Seiten",
   "edit page": "Seite editieren",
   "path": "path",
   "urlpath": "urlpath",
@@ -33,8 +33,8 @@
   "name": "Name",
   "files": "files",
   "upload": "upload",
-  "categories": "categories",
+  "categories": "Kategorien",
   "category": "category",
   "edit category": "edit category",
-  "new category": "new category"
+  "new category": "Neue Kategorie"
 }

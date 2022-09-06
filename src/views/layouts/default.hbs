@@ -15,8 +15,8 @@
       <li><a href="{{ this.url }}">{{ this.name }}</a></li>
       {{/each }}
       <li class="search">
-        <form id="search">
-          <input type="search" name="searchstr" placeholder="{{ __ "searchstr" }}">
+        <form id="search" method="get" action="/search">
+          <input type="search" name="q" placeholder="{{ __ "searchstr" }}">
           <button type="submit">{{ __ "search" }}</button>
         </form>
       </li>
@@ -25,12 +25,12 @@
   {{#if (eq role "admin") }}
   <nav class="admin">
     <ul>
-      <li><a href="/articles/drafts">{{ __ "article drafts" }}</a></li>
       <li><a href="/articles/new">{{ __ "new article" }}</a></li>
-      <li><a href="/pages/drafts">{{ __ "page drafts" }}</a></li>
       <li><a href="/pages/new">{{ __ "new page" }}</a></li>
-      <li><a href="/sitemaps">{{ __ "edit sitemaps" }}</a></li>
       <li><a href="/categories/new">{{ __ "new category" }}</a></li>
+      <li><a href="/articles/drafts">{{ __ "article drafts" }}</a></li>
+      <li><a href="/pages/drafts">{{ __ "page drafts" }}</a></li>
+      <li><a href="/sitemaps">{{ __ "edit sitemaps" }}</a></li>
       {{# if edit }}<li><a href="{{ edit }}">{{__ "edit"}}</a></li>{{/if }}
     </ul>
   </nav>

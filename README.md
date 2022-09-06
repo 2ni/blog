@@ -50,6 +50,7 @@ db.articles.find({ $text: { $search: "\"article\"" } }, { score: { $meta: "textS
 
 db.articles.getIndexes()
 db.articles.dropIndex("title_text_description_text")
+db.pages.drop()
 ```
 
 ### Authentication

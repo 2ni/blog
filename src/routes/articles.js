@@ -1,4 +1,5 @@
 import express from "express"
+import slugify from "slugify"
 const router = express.Router()
 import db from "../models/app.js"
 import path from "path"
@@ -22,9 +23,9 @@ router.get("/:page([0-9]+)?/:limit([0-9]+)?", async (req, res) => {
   let articles = null
   if (q) {
     if (!q.match(/"/)) q = q.split(/\s+/).map(kw => `"${kw}"`).join(' ')
-    articles = await db.articles.find({ status: "published", "$text": { "$search": q } }).limit(10).skip(startIndex).lean()
+    articles = await db.contents.find({ status: "published", contentType: "article", "$text": { "$search": q } }).limit(10).skip(startIndex).lean()
   } else {
-    articles = await db.articles.find({ status: "published" }).limit(limit).skip(startIndex).sort({ createdAt: "desc" }).lean()
+    articles = await db.contents.find({ status: "published", contentType: "article" }).limit(limit).skip(startIndex).sort({ createdAt: "desc" }).lean()
   }
 
   if (!articles.length && !q) {
@@ -36,7 +37,7 @@ router.get("/:page([0-9]+)?/:limit([0-9]+)?", async (req, res) => {
   if (startIndex) {
     previous = { previous: { page: page - 1, limit: limit}}
   }
-  if (endIndex < await db.articles.count({ status: "published" }).exec()) {
+  if (endIndex < await db.contents.count({ status: "published", contentType: "article" }).exec()) {
     next = { next: { page: page + 1, limit: limit}}
   }
   // console.log({...next, ...previous})
@@ -51,7 +52,7 @@ router.get("/:page([0-9]+)?/:limit([0-9]+)?", async (req, res) => {
 })
 
 router.get("/drafts", authorize, async (req, res) => {
-  const articles = await db.articles.find({ status: "draft" }).sort({ createdAt: "desc" }).lean()
+  const articles = await db.contents.find({ status: "draft", contentType: "article" }).sort({ createdAt: "desc" }).lean()
   res.render("articles/drafts", {
     title: "Articles",
     contents: articles,
@@ -65,14 +66,14 @@ router.get("/new", authorize, async (req, res) => {
 
 router.get("/:slug/edit", authorize, async (req, res) => {
   const url = path.join("/articles", req.params.slug)
-  const article = await db.articles.findOne({ url: url }).lean()
+  const article = await db.contents.findOne({ url: url }).lean()
   const categories = await db.categories.find().sort({ name: "asc" }).lean()
   res.render("articles/edit", { content: article, categories: categories, edit: path.join(url, "edit") })
 })
 
 router.get("/:slug", async (req, res) => {
   const url = path.join("/articles", req.params.slug)
-  const article = await db.articles.findOne({ url: url, status: "published" }).lean()
+  const article = await db.contents.findOne({ url: url, status: "published" }).lean()
   if (article === null) {
     res.status(404).render("404")
   } else {
@@ -81,35 +82,40 @@ router.get("/:slug", async (req, res) => {
 })
 
 router.post("/", authorize, async (req, res, next) => {
-  req.article = new db.articles()
+  req.article = new db.contents()
   next()
 }, saveAndRedirect("new"))
 
 router.put("/:id", authorize, async (req, res, next) => {
-  req.article = await db.articles.findById(req.params.id)
+  req.article = await db.contents.findById(req.params.id)
   next()
 }, saveAndRedirect("edit"))
 
 router.delete("/:id", authorize, async (req, res) => {
-  await db.articles.findByIdAndDelete(req.params.id)
+  await db.contents.findByIdAndDelete(req.params.id)
   res.redirect("/")
 })
 
-function saveAndRedirect(path) {
+function saveAndRedirect(origin) {
   return async (req, res) => {
     let article = req.article
     article.status = req.body.status
     article.title = req.body.title
-    article.description = req.body.description
     article.markdown = req.body.markdown.replace(/\n/g, "")
     article.category = req.body.category || null
+    article.contentType = "article"
+    article.url = path.join("/articles", slugify(article.title, { lower: true, strict: true }))
 
     try {
       article = await article.save()
-      res.redirect(article.url)
+      if (article.status === "published") {
+        res.redirect(article.url)
+      } else {
+        res.redirect(path.join(article.url, "edit"))
+      }
     } catch (e) {
       console.log(e)
-      res.render(`articles/${path}`, { content: article })
+      res.render(`articles/${origin}`, { content: article })
     }
   }
 }

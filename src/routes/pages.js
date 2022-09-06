@@ -5,7 +5,7 @@ import path from "path"
 import { authorize } from "../middleware/auth.js"
 
 router.get("/drafts", async (req, res) => {
-  const pages = await db.pages.find({ status: "draft" }).sort({ createdAt: "desc" }).lean()
+  const pages = await db.contents.find({ status: "draft", contentType: "page" }).sort({ createdAt: "desc" }).lean()
   res.render("pages/drafts", {
     title: "Pages",
     contents: pages,
@@ -17,17 +17,17 @@ router.get("/new", authorize, (req, res) => {
 })
 
 router.post("/", authorize, async (req, res, next) => {
-  req.page = new db.pages()
+  req.page = new db.contents()
   next()
 }, saveAndRedirect("new"))
 
 router.put("/:id", authorize, async (req, res, next) => {
-  req.page = await db.pages.findById(req.params.id)
+  req.page = await db.contents.findById(req.params.id)
   next()
 }, saveAndRedirect("edit"))
 
 router.delete("/:id", authorize, async (req, res) => {
-  await db.pages.findByIdAndDelete(req.params.id)
+  await db.contents.findByIdAndDelete(req.params.id)
   res.redirect("/")
 })
 
@@ -36,7 +36,8 @@ function saveAndRedirect(command) {
     let page = req.page
     page.status = req.body.status
     page.title = req.body.title
-    page.url = path.join("/", req.body.url.replace(/[^a-zA-Z0-9\/]/, ""))
+    page.url = path.join("/", req.body.url.replace(/[^a-zA-Z0-9i\-\+\/]/, ""))
+    page.contentType = "page"
     // do not allow certian urls, eg /articles/*, */edit
     if (page.url.match(/^\/(articles|sitemaps|categories)\//) || page.url.match(/\/edit$/)) {
       return res.render(`pages/${command}`, { content: page })
@@ -46,7 +47,11 @@ function saveAndRedirect(command) {
 
     try {
       page = await page.save()
-      res.redirect(page.url)
+      if (page.status === "published") {
+        res.redirect(page.url)
+      } else {
+        res.redirect(path.join(page.url, "edit"))
+      }
     } catch (e) {
       console.log(e)
       res.render(`pages/${command}`, { content: page })

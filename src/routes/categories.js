@@ -20,7 +20,7 @@ router.get("/:categoryName", async (req, res) => {
   }
 
   // TODO add paging
-  const articles = await db.articles.find({ status: "published", categoryName: req.params.categoryName }).sort({ createdAt: "desc" }).lean()
+  const articles = await db.contents.find({ status: "published", categoryName: req.params.categoryName }).sort({ createdAt: "desc" }).lean()
   res.render("articles/index", { contents: articles, edit: path.join("/categories", req.params.categoryName, "edit") })
 })
 
@@ -42,7 +42,7 @@ router.put("/:id", authorize, async (req, res, next) => {
 
 router.delete("/:id", authorize, async (req, res) => {
   // TODO only delete if no articles connected to the category
-  if (await db.articles.find({ categoryName: { $ne: null }})) {
+  if (await db.contents.find({ categoryName: { $ne: null }})) {
     await db.categories.findByIdAndDelete(req.params.id)
     res.redirect("/categories")
   } else {

@@ -1,0 +1,23 @@
+<section class="articles">
+  <form action="/search" id="search" method="get">
+    <input type="search" name="q" value="{{ q }}" placeholder="{{ __ "searchstr" }}">
+    <button type="submit">{{ __ "search" }}</button>
+  </form>
+
+  <ul>
+    {{#each contents}}
+    <li>
+      <a href="{{ this.url }}">
+        <header>
+          <h4>{{ this.title }}</h4>
+          <div class="category">{{ this.categoryName }}</div>
+          <time datetime="{{ formatDate this.createdAt showTime=true }}">{{formatDate this.createdAt}}</time>
+        </header>
+        <div class="description">{{ this.description }}</div>
+      </a>
+    </li>
+    {{/each}}
+  </ul>
+</section>
+
+<pre class="debug">{{ json contents }}</pre>

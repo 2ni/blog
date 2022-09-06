@@ -32,7 +32,7 @@ categorySchema.pre("validate", async function() {
 
 categorySchema.pre("save", async function() {
   if (this.isModified("name")) {
-    await db.articles.updateMany({ category: this._id }, { categoryName: this.name })
+    await db.contents.updateMany({ category: this._id }, { categoryName: this.name })
   }
 })
 
