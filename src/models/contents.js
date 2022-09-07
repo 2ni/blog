@@ -19,6 +19,7 @@ const allowedAttributes = [ "width", "height", "alt", "title", "id" ]
  *
  * Quotes
  * > It's still magic even if you know how it's done
+ * >
  * > -- <cite>Terry Pratchett, A Hat Full of Sky</cite>
  *
  * TODO authorization
@@ -114,7 +115,10 @@ const contentSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  contentType: [ "article", "page" ],
+  contentType: {
+    type: String,
+    enum: [ "article", "page" ],
+  },
   title: {
     type: String,
   },

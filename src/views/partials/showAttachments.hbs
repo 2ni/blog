@@ -9,7 +9,7 @@
     </li>
     {{/each }}
   </ul>
-  <form action="/attachments/page/{{ content._id }}?respond=page" enctype="multipart/form-data" method="post">
+  <form action="/attachments/{{ content._id }}" enctype="multipart/form-data" method="post">
     <fieldset>
       <label for="files">{{ __ "files" }}</label>
       <input id="files" name="files" type="file" accept="image/*, application/pdf" multiple>

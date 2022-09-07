@@ -16,8 +16,6 @@ const mime_map = {
   "image/jpg": "jpg",
 }
 
-const allowedContent = [ "article", "page" ]
-
 const baseStoragePath = "attachments"
 
 /*
@@ -79,12 +77,8 @@ const resizeAttachments = async (req, res, next) => {
 }
 
 const validateRequest = async (req, res, next) => {
-  if (allowedContent.indexOf(req.params.content) === -1) {
-    return res.status(400).json({ "status": "error", "msg": "content must be \"article\" or \"page\"" })
-  }
-
-  if (await !db[req.params.content + "s"].findById(req.params.id)) {
-    return res.status(413).json({ "status": "error", "msg": `${req.params.content} ${req.params.id} not found` })
+  if (await !db.contents.findById(req.params.id)) {
+    return res.status(413).json({ "status": "error", "msg": `${req.params.id} not found` })
   }
   next()
 }
@@ -141,27 +135,26 @@ router.get("/:size?/:filename", async (req, res) => {
 })
 
 /*
- * http -bf post :3001/attachments/page/62b6ffac2fff4a4a4845ac5b[?respond=[page|article]] files@someimage.png files@someotherimage.jpg
+ * http -bf post :3001/attachments/62b6ffac2fff4a4a4845ac5b[?format=json] files@someimage.png files@someotherimage.jpg
  *
  * mongoshell > db.pages.update({_id: ObjectId("62b6ffac2fff4a4a4845ac5b")}, { $set : {"attachments": [] }}, { multi: true})
  * mongoshell > db.articles.find({}, { "title": 1, "attachments": 1 })
  *
  * see https://stackoverflow.com/questions/39350040/uploading-multiple-files-with-multer
  *
- * :content: "page", "article"
  */
-router.post("/:content/:id", validateRequest, uploadAttachments, resizeAttachments, async (req, res) => {
-  const docs = await db[req.params.content + "s"].findByIdAndUpdate(
+router.post("/:id", validateRequest, uploadAttachments, resizeAttachments, async (req, res) => {
+  const docs = await db.contents.findByIdAndUpdate(
     req.params.id,
     { $push: { attachments : { $each: req.files.map((file) => { return file.filenameNaked }) } } }
   )
 
   // respond with html or json
-  if (req.query.respond) {
-    res.redirect(req.query.respond === "page" ? path.join("/edit", docs.url) : path.join("/articles/edit", docs.slug))
-  } else {
-    if (docs === null) return res.status(413).json({ "status": "error", "msg": `${req.params.content} ${req.params.id} not found` })
+  if (req.query.format === "json") {
+    if (docs === null) return res.status(413).json({ "status": "error", "msg": `${req.params.id} not found` })
     return res.status(200).json({"status": "ok", "files": req.files.map((file) => { return file.path }) })
+  } else {
+    res.redirect(docs.contentType === "page" ? path.join(docs.url, "edit") : path.join("/articles/edit", docs.slug))
   }
 })
 
