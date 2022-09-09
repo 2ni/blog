@@ -22,7 +22,7 @@
       </li>
     </ul>
   </nav>
-  {{#if (eq role "admin") }}
+  {{#if (eq user.role "admin") }}
   <nav class="admin">
     <ul>
       <li><a href="/articles/new">{{ __ "new article" }}</a></li>

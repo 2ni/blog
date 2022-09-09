@@ -3,17 +3,17 @@ const router = express.Router()
 import db from "../models/app.js"
 import { authorize } from "../middleware/auth.js"
 
-router.get("/", authorize, async (req, res) => {
+router.get("/", authorize("admin"), async (req, res) => {
   const sitemaps = await db.sitemaps.findOne().lean()
   res.render("sitemaps/edit", { sitemaps: sitemaps })
 })
 
-router.put("/", authorize, async (req, res, next) => {
+router.put("/", authorize("admin"), async (req, res, next) => {
   req.sitemaps = await db.sitemaps.findOne() || new db.sitemaps()
   next()
 }, saveAndRedirect())
 
-router.put("/delete/:index", authorize, async (req, res, next) => {
+router.put("/delete/:index", authorize("admin"), async (req, res, next) => {
   req.sitemaps = await db.sitemaps.findOne() || new db.sitemaps()
   next()
 }, saveAndRedirect())

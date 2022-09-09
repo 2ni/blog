@@ -14,7 +14,22 @@ const getImageFn = (filename, size) => {
   return filename.replace(/(\.[^.]*)$/, "." + size + "$1")
 }
 
+/*
+ * filterKeys(object, "key1,key2")
+ */
+const filterKeys = (object, exposedKeys) => {
+  if (typeof(exposedKeys) === "string") exposedKeys = exposedKeys.replace(/, /, ",").split(",")
+  return Object.fromEntries(Object.entries(object).filter(([k,v]) => exposedKeys.includes(k)))
+}
+
+const excludeKeys = (object, excludeKeys) => {
+  if (typeof(excludeKeys) === "string") excludeKeys = excludeKeys.replace(/, /, ",").split(",")
+  return Object.fromEntries(Object.entries(object).filter(([k,v]) => !excludeKeys.includes(k)))
+}
+
 export {
   splitImagePath,
   getImageFn,
+  filterKeys,
+  excludeKeys,
 }

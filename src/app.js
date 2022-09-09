@@ -10,8 +10,10 @@ import os from "os"
 import path from "path"
 import cookieParser from "cookie-parser"
 import methodOverride from "method-override"
+import jwt from "jsonwebtoken"
 import { fileURLToPath } from "url"
 import { dirname } from "path"
+import { authorize } from "./middleware/auth.js"
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
@@ -24,6 +26,7 @@ import attachmentRoutes from "./routes/attachments.js"
 import sitemapsRoutes from "./routes/sitemaps.js"
 import categoriesRoutes from "./routes/categories.js"
 import searchRoutes from "./routes/search.js"
+import authRoutes from "./routes/auth.js"
 
 import db from "./models/app.js"
 process.stdout.write("waiting for DB...")
@@ -89,16 +92,21 @@ app.use(i18n.init)
 
 // middleware to set general things such as language depending on url
 // https://stackoverflow.com/questions/19539332/localization-nodejs-i18n
-const allowedRoles = [ "admin" ]
 app.use(async (req, res, next) => {
   res.setLocale("de")
   req.setLocale("de")
 
   res.locals.sitemaps = await db.sitemaps.findOne().lean()
 
-  if (req.cookies.role && allowedRoles.indexOf(req.cookies.role) !== -1) {
-    res.locals.role = req.cookies.role
+  // set user if token is valid to make available everywhere
+  const token = req.cookies.token
+  if (token) {
+    jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
+      if (err) return res.status(403).render("404")
+      res.locals.user = user
+    })
   }
+
   // res.set("x-check", "test")
 
   res.set("Cache-Control", "max-age:300, private")
@@ -116,6 +124,7 @@ app.use("/attachments", attachmentRoutes)
 app.use("/sitemaps", sitemapsRoutes)
 app.use("/categories", categoriesRoutes)
 app.use("/search", searchRoutes)
+app.use("/auth", authRoutes)
 
 app.get("/", async (req, res) => {
   /*

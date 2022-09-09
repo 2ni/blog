@@ -51,7 +51,7 @@ router.get("/:page([0-9]+)?/:limit([0-9]+)?", async (req, res) => {
   })
 })
 
-router.get("/drafts", authorize, async (req, res) => {
+router.get("/drafts", authorize("admin"), async (req, res) => {
   const articles = await db.contents.find({ status: "draft", contentType: "article" }).sort({ createdAt: "desc" }).lean()
   res.render("articles/drafts", {
     title: "Articles",
@@ -59,12 +59,12 @@ router.get("/drafts", authorize, async (req, res) => {
   })
 })
 
-router.get("/new", authorize, async (req, res) => {
+router.get("/new", authorize("admin"), async (req, res) => {
   const categories = await db.categories.find().sort({ name: "asc" }).lean()
   res.render("articles/new", { categories: categories })
 })
 
-router.get("/:slug/edit", authorize, async (req, res) => {
+router.get("/:slug/edit", authorize("admin"), async (req, res) => {
   const url = path.join("/articles", req.params.slug)
   const article = await db.contents.findOne({ url: url }).lean()
   const categories = await db.categories.find().sort({ name: "asc" }).lean()
@@ -81,17 +81,17 @@ router.get("/:slug", async (req, res) => {
   }
 })
 
-router.post("/", authorize, async (req, res, next) => {
+router.post("/", authorize("admin"), async (req, res, next) => {
   req.article = new db.contents()
   next()
 }, saveAndRedirect("new"))
 
-router.put("/:id", authorize, async (req, res, next) => {
+router.put("/:id", authorize("admin"), async (req, res, next) => {
   req.article = await db.contents.findById(req.params.id)
   next()
 }, saveAndRedirect("edit"))
 
-router.delete("/:id", authorize, async (req, res) => {
+router.delete("/:id", authorize("admin"), async (req, res) => {
   await db.contents.findByIdAndDelete(req.params.id)
   res.redirect("/")
 })

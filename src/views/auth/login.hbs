@@ -1,0 +1,19 @@
+<section class="auth">
+  <form method="post">
+    <fieldset>
+      <label for="email">{{ __ "email" }}</label>
+      <input autofocus required type="text" value="{{ user.email }}" name="email" id="email">
+    </fieldset>
+    <fieldset>
+      <label for="password">{{ __ "password" }}</label>
+      <input required type="password" value="{{ user.password }}" name="password" id="password">
+    </fieldset>
+    <fieldset class="actions">
+      <a href="/">{{ __ "cancel" }}</a>
+      <button name="submit" type="submit">{{ __ "save" }}</button>
+      {{#if error}}
+      <span>{{ error }}</span>
+      {{/if}}
+    </fieldset>
+  </form>
+</section>

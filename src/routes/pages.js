@@ -12,21 +12,21 @@ router.get("/drafts", async (req, res) => {
   })
 })
 
-router.get("/new", authorize, (req, res) => {
+router.get("/new", authorize("admin"), (req, res) => {
   res.render("pages/new")
 })
 
-router.post("/", authorize, async (req, res, next) => {
+router.post("/", authorize("admin"), async (req, res, next) => {
   req.page = new db.contents()
   next()
 }, saveAndRedirect("new"))
 
-router.put("/:id", authorize, async (req, res, next) => {
+router.put("/:id", authorize("admin"), async (req, res, next) => {
   req.page = await db.contents.findById(req.params.id)
   next()
 }, saveAndRedirect("edit"))
 
-router.delete("/:id", authorize, async (req, res) => {
+router.delete("/:id", authorize("admin"), async (req, res) => {
   await db.contents.findByIdAndDelete(req.params.id)
   res.redirect("/")
 })

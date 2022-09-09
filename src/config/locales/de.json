@@ -36,5 +36,8 @@
   "categories": "Kategorien",
   "category": "category",
   "edit category": "edit category",
-  "new category": "Neue Kategorie"
+  "new category": "Neue Kategorie",
+  "username": "username",
+  "password": "password",
+  "email": "email"
 }

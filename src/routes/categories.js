@@ -9,7 +9,7 @@ router.get("/", async (req, res) => {
   res.render("categories/index", { categories: categories })
 })
 
-router.get("/new", authorize, async (req, res) => {
+router.get("/new", authorize("admin"), async (req, res) => {
   res.render("categories/new")
 })
 
@@ -24,23 +24,23 @@ router.get("/:categoryName", async (req, res) => {
   res.render("articles/index", { contents: articles, edit: path.join("/categories", req.params.categoryName, "edit") })
 })
 
-router.get("/:slug/edit", authorize, async (req, res) => {
+router.get("/:slug/edit", authorize("admin"), async (req, res) => {
   const url = path.join("/categories", req.params.slug)
   const category = await db.categories.findOne({ url: url }).lean()
   res.render("categories/edit", { category: category, edit: path.join(url, "edit") })
 })
 
-router.post("/", authorize, async (req, res, next) => {
+router.post("/", authorize("admin"), async (req, res, next) => {
   req.category = new db.categories()
   next()
 }, saveAndRedirect("new"))
 
-router.put("/:id", authorize, async (req, res, next) => {
+router.put("/:id", authorize("admin"), async (req, res, next) => {
   req.category =  await db.categories.findById(req.params.id)
   next()
 }, saveAndRedirect())
 
-router.delete("/:id", authorize, async (req, res) => {
+router.delete("/:id", authorize("admin"), async (req, res) => {
   // TODO only delete if no articles connected to the category
   if (await db.contents.find({ categoryName: { $ne: null }})) {
     await db.categories.findByIdAndDelete(req.params.id)
@@ -50,7 +50,7 @@ router.delete("/:id", authorize, async (req, res) => {
   }
 })
 
-router.put("/delete/:index", authorize, async (req, res, next) => {
+router.put("/delete/:index", authorize("admin"), async (req, res, next) => {
   req.sitemaps = await db.sitemaps.findOne() || new db.sitemaps()
   next()
 }, saveAndRedirect())
