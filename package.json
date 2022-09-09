@@ -14,6 +14,7 @@
   "dependencies": {
     "@node-minify/clean-css": "^7.0.0",
     "@node-minify/core": "^7.0.0",
+    "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
@@ -24,6 +25,7 @@
     "helmet": "^5.1.0",
     "i18n": "^0.15.0",
     "jsdom": "^20.0.0",
+    "jsonwebtoken": "^8.5.1",
     "marked": "^4.0.17",
     "method-override": "^3.0.0",
     "mongoose": "^6.3.8",

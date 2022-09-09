@@ -35,6 +35,7 @@ select blog
 db.categories.insertOne({ "name": "electronics" })
 db.pages.find({}, { "title": 1, "url": 1, "attachments": 1, "markdown": 1 })
 db.pages.updateOne({_id: ObjectId("62b6ffac2fff4a4a4845ac5b")}, { $set : {"attachments": [] }}, { multi: true})
+db.users.updateOne({email: "denis.demesmaeker@gmail.com"}, { $set: { role: "admin" } } )
 db.pages.find({_id: ObjectId("62b6ffac2fff4a4a4845ac5b")})
 db.sitemaps.drop()
 db.showIndexes()
