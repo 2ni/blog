@@ -57,12 +57,13 @@ router.post("/register", async (req, res) => {
 })
 
 const logUserIn = (res, user) => {
-  const access_token = jwt.sign({ email: user.email,  role: user.role }, process.env.TOKEN_SECRET, { expiresIn: "2592000s" })
+  const duration = 3600*24*30 // 30 days
+  const access_token = jwt.sign({ email: user.email,  role: user.role }, process.env.TOKEN_SECRET, { expiresIn: duration+"s" })
   res.cookie("token", access_token, {
     httpOnly: true,
     secure: env === "production",
     sameSite: true,
-    maxAge: 1000*3600*24*30, // 30 days in ms
+    maxAge: 1000*duration, // ms
   })
 }
 

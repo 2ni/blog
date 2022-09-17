@@ -17,16 +17,37 @@ const allowedAttributes = [ "width", "height", "alt", "title", "id" ]
  * !7ba3f7f8d982ebaf52693b3127583df9-2ni-southpark-avatar-r.jpg|size=thumbnail,alt=some alt!
  * !2b2bbc2165ea321cd9d9b2d1b32be321-pxl_20220716_094446980.jpg|size=medium,caption=Wandern\, macht Lust\!,alt=some alt!
  *
- * Quotes
- * > It's still magic even if you know how it's done
- * >
  * > -- <cite>Terry Pratchett, A Hat Full of Sky</cite>
  *
- * TODO authorization
- * TODO indexes on mongodb
+ * TODO logout/invalidate token
+ * TODO update token automatically
+ * TODO add indexes on mongodb
  */
-const descriptionList = {
-  name: "descriptionList",
+const customParagraph = {
+  name: "customParagraph",
+  level: "inline",
+  start(src) { return src.match(/^{[^}]*}.*$/s)?.index },
+  tokenizer(src, tokens) {
+    const rule = /^{([^}*]*)}(.*)\n\r?\s*--\s*(.*)$/s
+    const match = rule.exec(src)
+    if (match) {
+      const token = {
+        type: "customParagraph",
+        raw: match[0],
+        className: match[1],
+        quote: match[2],
+        author: match[3],
+      };
+      return token
+    }
+  },
+  renderer(token) {
+    return `<div class="${token.className}"><blockquote>${token.quote.replace(/\n/g, "<br>")}</blockquote><cite>${token.author}</cite></div>`
+  }
+}
+
+const customImage = {
+  name: "customImage",
   level: "inline",
   start(src) { return src.match(/!.*(?<!\\)!/)?.index }, // !filename! ignoring escaped exclamation marks
   tokenizer(src, tokens) {
@@ -53,7 +74,7 @@ const descriptionList = {
       })
       if (!validatedAttributes["title"] && validatedAttributes["alt"]) validatedAttributes["title"] = validatedAttributes["alt"]
       const token = {
-        type: "descriptionList",
+        type: "customImage",
         raw: match[0],
         src: match[1],
         validatedAttributes: validatedAttributes,
@@ -95,7 +116,7 @@ const descriptionList = {
     }
   }
 }
-marked.use({ extensions: [descriptionList] })
+marked.use({ extensions: [ customImage, customParagraph ] })
 /*
 console.log(marked.parse("some text ![alt](somepic.png|width  =200, height=300)."))
 console.log(marked.parse("some text ![alt](somepic.png)."))
@@ -143,7 +164,7 @@ const contentSchema = new mongoose.Schema({
 }, { timestamps: true })
 
 contentSchema.pre("validate", async function(next) {
-  marked.setOptions({ headerIds: true })
+  marked.setOptions({ headerIds: true, breaks: true })
   if (this.markdown) this.sanitizedHtml = domPurify.sanitize(marked(this.markdown))
 
   // update categoryName
