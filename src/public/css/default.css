@@ -262,6 +262,21 @@ nav ul {
   margin-bottom: .5rem;
 }
 
+.container table {
+  border-spacing: 0;
+}
+
+.container table th {
+  background-color: #D7DE9E;
+  text-align: left;
+  padding: .2rem .5rem;
+}
+
+.container table td {
+  padding: .2rem .5rem;
+  border: 1px solid #D7DE9E;
+}
+
 
 /******************************* */
 /* edit                          */
