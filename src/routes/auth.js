@@ -6,13 +6,14 @@ import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
 import  { env, config } from  "../config/app.js"
 import { filterKeys } from "../helpers/utils.js"
+import { authorizeFirewall } from "../middleware/auth.js"
 
-router.get("/login", async (req, res) => {
+router.get("/login", authorizeFirewall, async (req, res) => {
   const user = {}
   res.render("auth/login", { user: user })
 })
 
-router.post("/login", async (req, res, next) => {
+router.post("/login", authorizeFirewall, async (req, res, next) => {
   const user = await db.users.findOne({ email: req.body.email })
   if (user === null) {
     return res.render("auth/login", { user: filterKeys(req.body, "email,password"), error: "invalid login" })
@@ -32,11 +33,11 @@ router.post("/login", async (req, res, next) => {
   }
 })
 
-router.get("/register", async (req, res) => {
+router.get("/register", authorizeFirewall, async (req, res) => {
   res.render("auth/register")
 })
 
-router.post("/register", async (req, res) => {
+router.post("/register", authorizeFirewall, async (req, res) => {
   const user = new db.users({
     email: req.body.email,
     password: await bcrypt.hash(req.body.password, 10), // hashed pw
