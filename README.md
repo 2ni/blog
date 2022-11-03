@@ -10,6 +10,10 @@ mongosh
 npm init -y
 npm i express mongoose helmet express-handlebars compression i18n marked slugify method-override dompurify jsdom multer sharp dotenv cookie-parser
 npm i --save-dev nodemon
+
+npm outdated
+npm update the.package
+npm install the-package@5 # to upgrade to major version (eg from 4 to 5)
 ```
 - add the following to packacke.json to allow esm syntax:
 ```
