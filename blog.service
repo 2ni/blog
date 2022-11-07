@@ -1,0 +1,15 @@
+[Unit]
+Description=Blog
+
+[Service]
+ExecStart=/home/denis/www/blog/app.js
+Restart=always
+User=www-data
+# Note Debian/Ubuntu uses 'nogroup', RHEL/Fedora uses 'nobody'
+Group=www-data
+Environment=PATH=/usr/bin:/usr/local/bin
+Environment=ENV=production
+WorkingDirectory=/home/denis/www/blog
+
+[Install]
+WantedBy=multi-user.target
