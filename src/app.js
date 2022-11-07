@@ -138,9 +138,9 @@ app.get("/", async (req, res) => {
   const page = await db.contents.findOne({ url: "/", status: "published" }).lean()
   if (page === null) {
     const pages = await db.contents.find({ status: "published", contentType: "page" }).lean()
-    res.render("index", { pages: pages, edit: "/edit" })
+    res.render("index", { pages: pages, title: "Home" + config.urlTitle, edit: "/edit" })
   }
-  else res.render("pages/show", { content: page, edit: "/edit" })
+  else res.render("pages/show", { content: page, title: page.title + config.urlTitle, edit: "/edit" })
 })
 
 app.get("*/edit$", async (req, res) => {
@@ -160,7 +160,7 @@ app.get("*", async (req, res) => {
   if (page === null) {
     res.status(404).render("404", { edit: path.join(req.params[0], "edit") })
   } else {
-    res.render("pages/show", { content: page, edit: path.join(req.params[0], "edit") })
+    res.render("pages/show", { content: page, title: page.title + config.urlTitle, edit: path.join(req.params[0], "edit") })
   }
 })
 
