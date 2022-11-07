@@ -8,7 +8,7 @@ import sharp from "sharp"
 const router = express.Router()
 import db from "../models/app.js"
 import { getImageFn, splitImagePath } from "../helpers/utils.js"
-import  { config } from  "../config/app.js"
+import  config from  "../config/config.js"
 
 const mime_map = {
   "image/png": "png",

@@ -4,7 +4,6 @@ import db from "../models/app.js"
 import path from "path"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
-import  { env, config } from  "../config/app.js"
 import { filterKeys } from "../helpers/utils.js"
 import { authorizeFirewall } from "../middleware/auth.js"
 
@@ -62,7 +61,7 @@ const logUserIn = (res, user) => {
   const access_token = jwt.sign({ email: user.email,  role: user.role }, process.env.TOKEN_SECRET, { expiresIn: duration+"s" })
   res.cookie("token", access_token, {
     httpOnly: true,
-    secure: env === "production",
+    secure: process.env.ENV === "production",
     sameSite: true,
     maxAge: 1000*duration, // ms
   })

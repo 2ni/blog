@@ -18,7 +18,7 @@ import { authorize } from "./middleware/auth.js"
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-import  { config } from  "./config/app.js"
+import  config from  "./config/config.js"
 import * as handlebarsHelpers from "./helpers/handlebars.js"
 
 import articleRoutes from "./routes/articles.js"

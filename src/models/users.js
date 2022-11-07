@@ -1,8 +1,6 @@
 import mongoose from "mongoose"
 import path from "path"
-import  { config } from  "../config/app.js"
 import db from "./app.js"
-
 
 const userSchema = new mongoose.Schema({
   email: {

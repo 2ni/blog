@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 import { marked } from "marked"
 import path from "path"
 import { getImageFn } from "../helpers/utils.js"
-import  { config } from  "../config/app.js"
+import  config from  "../config/config.js"
 import db from "./app.js"
 
 import createDomPurify from "dompurify"
