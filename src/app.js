@@ -11,13 +11,14 @@ import path from "path"
 import cookieParser from "cookie-parser"
 import methodOverride from "method-override"
 import jwt from "jsonwebtoken"
+import * as dotenv from 'dotenv'
 import { fileURLToPath } from "url"
 import { dirname } from "path"
 import { authorize } from "./middleware/auth.js"
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-import  { env, config } from  "./config/app.js"
+import  { config } from  "./config/app.js"
 import * as handlebarsHelpers from "./helpers/handlebars.js"
 
 import articleRoutes from "./routes/articles.js"
@@ -28,6 +29,7 @@ import categoriesRoutes from "./routes/categories.js"
 import searchRoutes from "./routes/search.js"
 import authRoutes from "./routes/auth.js"
 
+dotenv.config()
 import db from "./models/app.js"
 process.stdout.write("waiting for DB...")
 try {
@@ -61,7 +63,7 @@ app.use(methodOverride("_method"))
  */
 app.use("/", express.static(path.join(__dirname, "public"), {
   setHeaders: (res, path) => {
-    if (env === "production") {
+    if (process.env.ENV === "production") {
       if (path.match(/\.css$/)) {
         res.set("Cache-Control", "public, max-age=604800, immutable")
       }
@@ -97,6 +99,7 @@ app.use(async (req, res, next) => {
   req.setLocale("de")
 
   res.locals.sitemaps = await db.sitemaps.findOne().lean()
+  res.locals.env = process.env.ENV
 
   // set user if token is valid to make available everywhere
   const token = req.cookies.token
@@ -167,5 +170,5 @@ app.listen(config.port, (err) => {
   }
 
   const now = handlebarsHelpers.formatDate(new Date(), { showTime: true })
-  console.log(`${now} server is listening on http://${os.hostname()}:${config.port} ${env}`)
+  console.log(`${now} server is listening on http://${os.hostname()}:${config.port} ${process.env.ENV}`)
 })

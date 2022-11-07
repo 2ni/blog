@@ -9,4 +9,6 @@
   </header>
   <div>{{{ content.sanitizedHtml }}}</div>
 </article>
+{{#if (neq env "production") }}
 <pre class="debug">{{ json content }}</pre>
+{{/if }}

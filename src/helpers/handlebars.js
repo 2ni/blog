@@ -30,6 +30,10 @@ const eq = function (a, b) {
   return a === b
 }
 
+const neq = function (a, b) {
+  return a !== b
+}
+
 const getAttachmentUrl = (filename) => {
   return splitImagePath(filename)
 }
@@ -39,5 +43,6 @@ export {
   json,
   select,
   eq,
+  neq,
   getAttachmentUrl,
 }

@@ -5,6 +5,29 @@ npm run dev
 mongosh
 ```
 
+### Installation prod
+add the following on top of app.js:
+```
+#!/usr/bin/env node
+```
+
+run the following:
+```
+git clone
+chmod a+x app.js
+npm i
+sudo cp blog.service /etc/systemd/system/
+(if already copied once: sudo systemctl daemon-reload)
+create .env file with TOKEN_SECRET
+
+sudo systemctl [start|stop|restart] blog
+sudo systemctl [enable|disable] blog        # to disable/enable  on boot
+sudo systemctl list-unit-files --type=service      # to list if service starts on boot
+journalctl -u blog -f                       # to show log output
+journalctl -u blog.service                  # show logs
+journalctl -u blog.service -b               # show logs from current boot
+```
+
 ### Installation
 ```
 npm init -y
@@ -20,7 +43,7 @@ npm install the-package@5 # to upgrade to major version (eg from 4 to 5)
 "type": "module"
 ```
 
-### Mongodb
+### Mongodb (localhost)
 add aliases to your .zshrc:
 ```
 alias mongod-local='mongod --dbpath `pwd`/dbdata'
@@ -33,6 +56,7 @@ alias mongod-stop='brew services stop mongodb-community'
 ```
 npm run dev
 ```
+
 ### mongodb shell commands
 ```
 select blog

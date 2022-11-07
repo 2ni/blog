@@ -32,6 +32,14 @@ const copyRecursiveSync = (src, dest) => {
 
   try {
     copyRecursiveSync("src", "dist-new")
+    if (fs.existsSync(".env")) {
+      fs.symlink("../.env", "dist-new/.env", (err) => {
+        if (err) {
+          console.log("symlinking .env failed.")
+          process.exit(0)
+	}
+      })
+    }
   } catch (e) {
     if (e.code === "EEXIST") {
       console.log("dist is up-to-date. Nonthing to do.")
@@ -93,5 +101,5 @@ const copyRecursiveSync = (src, dest) => {
     console.log("deleted " + dir)
   }
 
-  console.log("Buid successful.")
+  console.log("\nBuid successful. Don't forget 'sudo systemctl restart blog'")
 })()

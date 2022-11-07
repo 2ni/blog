@@ -2,14 +2,13 @@
 Description=Blog
 
 [Service]
-ExecStart=/home/denis/www/blog/app.js
+ExecStart=/home/denis/www/blog/dist/app.js
 Restart=always
 User=www-data
 # Note Debian/Ubuntu uses 'nogroup', RHEL/Fedora uses 'nobody'
 Group=www-data
 Environment=PATH=/usr/bin:/usr/local/bin
-Environment=ENV=production
-WorkingDirectory=/home/denis/www/blog
+WorkingDirectory=/home/denis/www/blog/dist
 
 [Install]
 WantedBy=multi-user.target
