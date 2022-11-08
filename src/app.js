@@ -95,8 +95,8 @@ app.use(i18n.init)
 // middleware to set general things such as language depending on url
 // https://stackoverflow.com/questions/19539332/localization-nodejs-i18n
 app.use(async (req, res, next) => {
-  res.setLocale("de")
-  req.setLocale("de")
+  res.setLocale("en")
+  req.setLocale("en")
 
   res.locals.sitemaps = await db.sitemaps.findOne().lean()
   res.locals.env = process.env.ENV

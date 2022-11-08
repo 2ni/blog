@@ -3,6 +3,7 @@ import slugify from "slugify"
 const router = express.Router()
 import db from "../models/app.js"
 import path from "path"
+import config from "../config/config.js"
 import { authorize } from "../middleware/auth.js"
 
 router.get("/:page([0-9]+)?/:limit([0-9]+)?", async (req, res) => {
@@ -47,6 +48,7 @@ router.get("/:page([0-9]+)?/:limit([0-9]+)?", async (req, res) => {
     ...previous,
     ...{
       contents: articles,
+      title: res.__("title all articles") + config.urlTitle,
     }
   })
 })
@@ -77,7 +79,7 @@ router.get("/:slug", async (req, res) => {
   if (article === null) {
     res.status(404).render("404")
   } else {
-    res.render("articles/show", { content: article, edit: path.join(url, "edit") })
+    res.render("articles/show", { content: article, title: article.title + config.urlTitle, edit: path.join(url, "edit") })
   }
 })
 
