@@ -16,7 +16,9 @@ const mime_map = {
   "image/jpg": "jpg",
 }
 
-const baseStoragePath = (process.env.STORAGE_PATH ? process.env.STORAGE_PATH : "attachments")
+import * as dotenv from 'dotenv'
+dotenv.config()
+const baseStoragePath = (process.env.ENV === "production" ? "../attachments" : "attachments")
 
 /*
  * based on https://www.bezkoder.com/node-js-upload-resize-multiple-images/
