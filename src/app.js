@@ -95,6 +95,14 @@ app.use(i18n.init)
 // middleware to set general things such as language depending on url
 // https://stackoverflow.com/questions/19539332/localization-nodejs-i18n
 app.use(async (req, res, next) => {
+
+  // redirect urls with trailing slashes
+  if (req.path.substr(-1) === "/" && req.path.length > 1) {
+    const query = req.url.slice(req.path.length)
+    const safepath = req.path.slice(0, -1).replace(/\/+/g, "/")
+    return res.redirect(301, safepath + query)
+  }
+
   res.setLocale("en")
   req.setLocale("en")
 
