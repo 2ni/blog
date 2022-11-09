@@ -277,6 +277,15 @@ nav ul {
   border: 1px solid #D7DE9E;
 }
 
+.container div.warning {
+  position: absolute;
+  font-size: 20rem;
+  top: 20rem;
+  opacity: .5;
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+}
+
 
 /******************************* */
 /* edit                          */

@@ -75,7 +75,8 @@ router.get("/:slug/edit", authorize("admin"), async (req, res) => {
 
 router.get("/:slug", async (req, res) => {
   const url = path.join("/articles", req.params.slug)
-  const article = await db.contents.findOne({ url: url, status: "published" }).lean()
+  const status = res.locals.user && res.locals.user.role === "admin" ? {} : { status: "published" }
+  const article = await db.contents.findOne({...{ url: url }, ...status }).lean()
   if (article === null) {
     res.status(404).render("404")
   } else {
