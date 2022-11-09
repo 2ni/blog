@@ -135,7 +135,8 @@ app.get("/", async (req, res) => {
   sitemaps.content = [{ name: "home", url: "/" }, { name: "articles", url: "/articles" }]
   await sitemaps.save()
   */
-  const page = await db.contents.findOne({ url: "/", status: "published" }).lean()
+  const status = res.locals.user && res.locals.user.role === "admin" ? {} : { status: "published" }
+  const page = await db.contents.findOne({ ...{ url: "/"}, ...status }).lean()
   if (page === null) {
     const pages = await db.contents.find({ status: "published", contentType: "page" }).lean()
     res.render("index", { pages: pages, title: "Home" + config.urlTitle, edit: "/edit" })

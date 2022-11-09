@@ -277,7 +277,7 @@ nav ul {
   border: 1px solid #D7DE9E;
 }
 
-.container div.warning {
+.container div.draftwarning {
   position: absolute;
   font-size: 20rem;
   top: 20rem;

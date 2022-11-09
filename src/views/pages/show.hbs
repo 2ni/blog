@@ -1,4 +1,7 @@
 <article class="page">
+  {{#if (eq content.status "draft")}}
+  <div class="draftwarning">DRAFT</div>
+  {{/if}}
   {{#if content.title }}
   <header>
     <h1>{{ content.title }}</h1>
