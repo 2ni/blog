@@ -3,7 +3,7 @@
 node_modules/
 *.swp
 dbdata/
-attachments/
+/attachments/
 dist-*
 dist/
 package-lock.json

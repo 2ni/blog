@@ -1,0 +1,5 @@
+<img srcset="{{#each data.sizes }}/attachments/{{this}}/{{../data.filename}} {{this}}w, {{/each }}" src="/attachments/thumbnail/{{data.filename}}">
+</pre>
+{{#if (neq env "production") }}
+<pre class="debug">{{ json data }}</pre>
+{{/if }}
