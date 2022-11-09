@@ -154,7 +154,7 @@ router.post("/:id", validateRequest, uploadAttachments, resizeAttachments, async
     if (docs === null) return res.status(413).json({ "status": "error", "msg": `${req.params.id} not found` })
     return res.status(200).json({"status": "ok", "files": req.files.map((file) => { return file.path }) })
   } else {
-    res.redirect(docs.contentType === "page" ? path.join(docs.url, "edit") : path.join("/articles/edit", docs.slug))
+    res.redirect(path.join(docs.url, "edit"))
   }
 })
 

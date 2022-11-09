@@ -5,7 +5,7 @@
   </form>
   <form action="/articles/{{ content._id }}?_method=delete" method="post">
     <button name="delete" type="submit">{{ __ "delete" }}</button>
-  <form>
+  </form>
 </section>
 {{> showAttachments }}
 {{#if (neq env "production") }}
