@@ -84,8 +84,8 @@ const customImage = {
     }
   },
   renderer(token) {
-    const validatedAttributesStr = Object.keys(token.validatedAttributes).map(k => { return `${k}="${token.validatedAttributes[k]}"` }).join(" ")
-    const attributes = token.attributes.reduce((ac,a) => (ac[a.split("=")[0]] = a.split("=")[1], ac), {})
+    const validatedAttributesStr = Object.keys(token.validatedAttributes).map(k => { return `${k}="${token.validatedAttributes[k].replaceAll('\"', '')}"` }).join(" ")
+    const attributes = token.attributes.reduce((ac, a) => (ac[a.split("=")[0]] = a.split("=")[1], ac), {})
     const img = `<img ${validatedAttributesStr} src="{src}">`
     const detailUrl = path.join("/attachments/show", token.src)
     let src = "/attachments"
