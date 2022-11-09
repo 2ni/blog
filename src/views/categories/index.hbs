@@ -3,7 +3,7 @@
   <ul>
     {{#each categories }}
     <li>
-      {{#if (eq ../role "admin") }}<a class="edit" href="{{ this.url }}/edit">&#x270E</a>{{/if}}
+      {{#if (eq ../user.role "admin") }}<a class="edit" href="{{ this.url }}/edit">&#x270E</a>{{/if}}
       <a href="{{ this.url }}">
         <header>
           <h4>{{ this.name }}</h4>
