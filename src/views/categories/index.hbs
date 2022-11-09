@@ -14,4 +14,6 @@
     {{/each}}
   </ul>
 </section>
+{{#if (neq env "production") }}
 <pre class="debug">{{ json categories }}</pre>
+{{/if }}

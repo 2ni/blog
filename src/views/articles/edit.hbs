@@ -8,4 +8,6 @@
   <form>
 </section>
 {{> showAttachments }}
+{{#if (neq env "production") }}
 <pre class="debug">{{ json content }}</pre>
+{{/if }}

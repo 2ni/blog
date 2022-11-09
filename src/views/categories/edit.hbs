@@ -7,4 +7,6 @@
     <button name="delete" type="submit">{{ __ "delete" }}</button>
   <form>
 </section>
+{{#if (neq env "production") }}
 <pre class="debug">{{ json category }}</pre>
+{{/if }}

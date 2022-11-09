@@ -20,4 +20,6 @@
   </ul>
 </section>
 
+{{#if (neq env "production") }}
 <pre class="debug">{{ json contents }}</pre>
+{{/if }}
