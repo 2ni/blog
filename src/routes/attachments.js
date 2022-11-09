@@ -16,7 +16,7 @@ const mime_map = {
   "image/jpg": "jpg",
 }
 
-const baseStoragePath = "attachments"
+const baseStoragePath = (process.env.STORAGE_PATH ? process.env.STORAGE_PATH : "attachments")
 
 /*
  * based on https://www.bezkoder.com/node-js-upload-resize-multiple-images/
