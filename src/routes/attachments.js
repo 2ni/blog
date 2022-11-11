@@ -119,8 +119,11 @@ router.get("/:size?/:filename", async (req, res) => {
     fn = path.join(fn, req.params.filename)
   } else if (config.allowedImageSizes.indexOf(sizeInt) !== -1) {
     fn = path.join(fn, getImageFn(req.params.filename, sizeStr))
+    const origFn = fn.replace(/\.[^.]*\.([^.]*)$/, ".$1")
+    if (!fs.existsSync(origFn)) return res.sendStatus(400)
+
     if (!fs.existsSync(fn)) {
-      const newfile = await sharp(fn.replace(/\.[^.]*\.([^.]*)$/, ".$1"), { failOnError: false })
+      const newfile = await sharp(origFn, { failOnError: false })
       await newfile.resize(sizeInt, sizeInt, { fit: "inside", withoutEnlargement: true }) // no upscaling -> same image with different names can happen
       await newfile.toFile(fn)
     }
