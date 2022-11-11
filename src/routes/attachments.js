@@ -10,10 +10,12 @@ import db from "../models/app.js"
 import { getImageFn, splitImagePath } from "../helpers/utils.js"
 import  config from  "../config/config.js"
 
+// first 3 are handled as image, see function resizeAttachments
 const mime_map = {
   "image/png": "png",
   "image/jpeg": "jpg",
   "image/jpg": "jpg",
+  "application/pdf": "pdf",
 }
 
 import * as dotenv from 'dotenv'
@@ -34,12 +36,12 @@ const storage = multer.diskStorage({
     const filename = crypto.createHash("md5").update(uniqueSuffix + "-" + origFilename + "." + extension).digest("hex") + "-" + origFilename + "." + extension
     file.filenameNaked = filename
 
-    const subdirImg = splitImagePath(filename)
-    const dir = path.join(baseStoragePath, subdirImg)
+    const subdir = splitImagePath(filename)
+    const dir = path.join(baseStoragePath, subdir)
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true })
     }
-    cb(null, path.join(subdirImg, filename))
+    cb(null, path.join(subdir, filename))
   }
 })
 
@@ -68,11 +70,14 @@ const resizeAttachments = async (req, res, next) => {
 
   await Promise.all(
     req.files.map((file) => {
-      sharp(file.path, { failOnError: false })
-        .resize(200, 200, { fit: "inside" })
-        .toFile(getImageFn(file.path, "thumbnail"), (err, info) => {
-          if (err) console.log("res", err)
-        })
+      // if image
+      if (Object.keys(mime_map).slice(0, 3).includes(file.mimetype)) {
+        sharp(file.path, { failOnError: false })
+          .resize(200, 200, { fit: "inside" })
+          .toFile(getImageFn(file.path, "thumbnail"), (err, info) => {
+            if (err) console.log("res", err)
+          })
+      }
     })
   )
   next()
@@ -146,9 +151,12 @@ router.get("/:size?/:filename", async (req, res) => {
  *
  */
 router.post("/:id", validateRequest, uploadAttachments, resizeAttachments, async (req, res) => {
+  // TODO: remove file from req.files if error occurs, to not save it in attachments
   const docs = await db.contents.findByIdAndUpdate(
     req.params.id,
-    { $push: { attachments : { $each: req.files.map((file) => { return file.filenameNaked }) } } }
+    { $push: { attachments : { $each: req.files.map((file) => {
+      return { name: file.filenameNaked, mimeType: file.mimetype, createdAt: new Date().toISOString() }
+    }) } } }
   )
 
   // respond with html or json

@@ -34,6 +34,17 @@ const neq = function (a, b) {
   return a !== b
 }
 
+/*
+ * {{#if (eq (filetype this.mimeType) "image") }}
+ * this is an image
+ * {{/if}}
+ */
+const fileType = function (mimeType) {
+  if (mimeType.startsWith("image/")) return "image"
+  else if (mimeType.endsWith("/pdf")) return "pdf"
+  else return "unknown"
+}
+
 const getAttachmentUrl = (filename) => {
   return splitImagePath(filename)
 }
@@ -44,5 +55,6 @@ export {
   select,
   eq,
   neq,
+  fileType,
   getAttachmentUrl,
 }

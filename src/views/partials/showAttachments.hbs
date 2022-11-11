@@ -3,8 +3,12 @@
     {{#each content.attachments }}
     <li>
       <figure>
-        <div><img src="/attachments/thumbnail/{{ this }}"></div>
-        <figcaption>{{ this }}</figcaption>
+        <div>
+          {{#if (eq (fileType this.mimeType) "image") }}
+          <img src="/attachments/thumbnail/{{ this.name }}">
+          {{/if}}
+        </div>
+        <figcaption>{{ this.name }}</figcaption>
       </figure>
     </li>
     {{/each }}

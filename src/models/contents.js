@@ -149,7 +149,7 @@ const contentSchema = new mongoose.Schema({
   sanitizedHtml: {
     type: String,
   },
-  attachments: [String],
+  attachments: [{ name: String, mimeType: String, createdAt: Date, _id: false }],
   // avoid using real relations to avoid mongoose eg populating data in pre hooks
   category: {
     type: String,
