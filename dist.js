@@ -24,6 +24,7 @@ const copyRecursiveSync = (src, dest) => {
   const FILES = [
     "public/css/default.css",
     "public/css/fonts/fonts.css",
+    "public/js/yt.js",
   ]
 
   try {

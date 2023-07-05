@@ -1,3 +1,10 @@
+### Deploy
+```
+ssh mouette; cd blog
+git pull
+node dist.js
+```
+
 ### Coding Setup
 ```
 mongod-local
