@@ -12,7 +12,45 @@ npm run dev
 mongosh
 ```
 
-### Installation prod
+### Installation
+
+#### setup some folders
+```
+mkdir attachments
+mkdir tmp
+sudo chown -R www-data tmp
+sudo chown -R www-data attachments
+sudo chgrp -R www-data attachments
+```
+
+#### yt-dlp
+Install yt-dlp in folder to make it accessible to www-data user (avoid EACCES error with spawn. The following commands can be run by denis.
+The python virtualenv will be installed in the folder yt.
+yt/bin must be part of the environment path in the file blog.service
+
+```
+pip3 install virtualenv
+cd blog/
+virtualenv -p python3 yt
+yt/bin/pip install yt-dlp
+```
+
+#### nodejs
+```
+npm init -y
+npm i express mongoose helmet express-handlebars compression i18n marked slugify method-override dompurify jsdom multer sharp dotenv cookie-parser
+npm i --save-dev nodemon
+
+npm outdated
+npm update the.package
+npm install the-package@5 # to upgrade to major version (eg from 4 to 5)
+```
+- add the following to packacke.json to allow esm syntax:
+```
+"type": "module"
+```
+
+#### prod
 add the following on top of app.js:
 ```
 #!/usr/bin/env node
@@ -33,21 +71,6 @@ sudo systemctl list-unit-files --type=service      # to list if service starts o
 journalctl -u blog -f                       # to show log output
 journalctl -u blog.service                  # show logs
 journalctl -u blog.service -b               # show logs from current boot
-```
-
-### Installation
-```
-npm init -y
-npm i express mongoose helmet express-handlebars compression i18n marked slugify method-override dompurify jsdom multer sharp dotenv cookie-parser
-npm i --save-dev nodemon
-
-npm outdated
-npm update the.package
-npm install the-package@5 # to upgrade to major version (eg from 4 to 5)
-```
-- add the following to packacke.json to allow esm syntax:
-```
-"type": "module"
 ```
 
 ### Mongodb (localhost)

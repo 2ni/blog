@@ -5,7 +5,8 @@ import fs from "fs"
 import { spawn } from "child_process"
 import multer from "multer"
 
-const upload = multer({ dest: "tmp/" })
+const tmpFolder = "../tmp/"
+const upload = multer({ dest: tmpFolder })
 let progressData = { percentComplete: 0, isComplete: false, eta: "", logs: [] } // TODO: object which is request or user specific
 
 router.get("/health", (req, res) => {
@@ -22,7 +23,7 @@ router.post("/download", authorize("admin"), upload.none(), (req, res) => {
   const resolution = req.body.resolution || 1440
 
   // const filename = `file-${Date.now()}.txt`
-  // const filePath = `tmp/${filename}`
+  // const filePath = `${tmpFolder}/${filename}`
   // fs.writeFileSync(filePath, url)
 
   // alias yt-dlp-web='yt-dlp -cf "bv*[ext=mp4][width<=1440]+ba/b"'
@@ -31,9 +32,9 @@ router.post("/download", authorize("admin"), upload.none(), (req, res) => {
   if (req.body.info) {
     command = spawn("yt-dlp", [ "-F", url ])
   } else if (req.body.audio) {
-    command = spawn("yt-dlp", [ "--newline", "--extract-audio", "--audio-format", "mp3", url ], { "cwd": "tmp" })
+    command = spawn("yt-dlp", [ "--newline", "--extract-audio", "--audio-format", "mp3", url ], { "cwd": tmpFolder })
   } else {
-    command = spawn("yt-dlp", [ "--newline", url, "-cf", `bv*[ext=mp4][width<=${resolution}]+ba/b` ], { "cwd": "tmp" })
+    command = spawn("yt-dlp", [ "--newline", url, "-cf", `bv*[ext=mp4][width<=${resolution}]+ba/b` ], { "cwd": tmpFolder
   }
 
   // const command = spawn("echo", ['[Merger] Merging formats into "test.mkv'])
@@ -120,7 +121,7 @@ router.get("/file/:filename", authorize("admin"), (req, res) => {
   res.setHeader("Cache-Control", "public, max-age=0") // to ensure we call the endpoint and delete the file
 
   const filename = req.params.filename
-  const filePath = `tmp/${filename}`
+  const filePath = `${tmpFolder}/${filename}`
 
   res.download(filePath, err => {
     if (err) {

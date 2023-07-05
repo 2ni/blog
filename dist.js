@@ -85,7 +85,8 @@ const copyRecursiveSync = (src, dest) => {
   }
 
   // create needed tmp dir
-  fs.mkdirSync(path.join("dist-new", "tmp"))
+  // we use tmp dir in the root of the project now
+  // fs.mkdirSync(path.join("dist-new", "tmp"))
 
   // move current dir to dist-<date>
   // const seconds = String(Math.round(fs.lstatSync("./src").mtimeMs/1000%86400))

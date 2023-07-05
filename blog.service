@@ -7,7 +7,7 @@ Restart=always
 User=www-data
 # Note Debian/Ubuntu uses 'nogroup', RHEL/Fedora uses 'nobody'
 Group=www-data
-Environment=PATH=/usr/bin:/usr/local/bin
+Environment=PATH=/usr/bin:/usr/local/bin:/home/denis/www/blog/yt/bin
 WorkingDirectory=/home/denis/www/blog/dist
 
 [Install]
