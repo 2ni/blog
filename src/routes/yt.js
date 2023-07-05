@@ -34,7 +34,7 @@ router.post("/download", authorize("admin"), upload.none(), (req, res) => {
   } else if (req.body.audio) {
     command = spawn("yt-dlp", [ "--newline", "--extract-audio", "--audio-format", "mp3", url ], { "cwd": tmpFolder })
   } else {
-    command = spawn("yt-dlp", [ "--newline", url, "-cf", `bv*[ext=mp4][width<=${resolution}]+ba/b` ], { "cwd": tmpFolder
+    command = spawn("yt-dlp", [ "--newline", url, "-cf", `bv*[ext=mp4][width<=${resolution}]+ba/b` ], { "cwd": tmpFolder })
   }
 
   // const command = spawn("echo", ['[Merger] Merging formats into "test.mkv'])

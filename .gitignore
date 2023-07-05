@@ -4,6 +4,7 @@ node_modules/
 *.swp
 dbdata/
 /attachments/
+/tmp/
 dist-*
 dist/
 package-lock.json
