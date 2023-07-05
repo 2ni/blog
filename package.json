@@ -14,6 +14,7 @@
   "dependencies": {
     "@node-minify/clean-css": "^7.0.0",
     "@node-minify/core": "^7.0.0",
+    "@node-minify/uglify-js": "^8.0.6",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
     "compression": "^1.7.4",

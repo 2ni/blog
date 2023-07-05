@@ -3,6 +3,7 @@ import path from "path"
 import crypto from "crypto"
 import minify from "@node-minify/core"
 import cssMinify from "@node-minify/clean-css"
+import jsMinify from "@node-minify/uglify-js"
 
 import * as handlebarsHelpers from "./src/helpers/handlebars.js"
 
@@ -58,7 +59,7 @@ const copyRecursiveSync = (src, dest) => {
     const targetAbs = path.join("dist-new", target)
     console.log(fn + " -> " + target)
     minify({
-      compressor: cssMinify,
+      compressor: fn.endsWith(".css") ? cssMinify : jsMinify,
       input: fnAbs,
       output: targetAbs,
       callback: ((err, min) => {})
