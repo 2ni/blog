@@ -1,0 +1,24 @@
+<section class="yt">
+  <form id="downloadForm" method="POST" action=/yt/download" enctype="multipart/form-data">
+    <input type="url" id="url" name="url" placeholder="Enter URL" required autofocus>
+    <input id="resolution" type="digit" name="resolution" placeholder="Enter max resolution, default 1440">
+    <div id="audioWrapper">
+      <input id="audio" type="checkbox" name="audio">
+      <label for="audio">Audio only</label>
+    </div>
+    <input id="info" type="checkbox" name="info">
+    <label for="info">Info only</label>
+    <div><button type="submit">Download Now</button></div>
+  </form>
+
+  <div id="downloadLinkContainer">
+    <div>Download should start automatically, alternatively use the link below!</div>
+    <a id="downloadLink" href="#">Download Now</a>
+  </div>
+
+  <div id="progressContainer">
+    <span>0%</span>
+    <progress id="progressBar" value="0" max="100"></progress>
+    <pre id="progressLog"></pre>
+  </div>
+</section>

@@ -374,3 +374,82 @@ nav ul {
   font-size: 1rem;
   box-sizing: border-box;
 }
+
+
+/******************************* */
+/* yt                            */
+/******************************* */
+progress {
+  -webkit-appearance: none;
+  color: blue;
+}
+
+progress::-webkit-progress-value {
+  background: blue;
+}
+
+progress::-webkit-progress-bar {
+  background-color: #ddd;
+}
+
+section.yt {
+  margin-top: 1rem;
+  max-width: 1200px;
+}
+
+section.yt form {
+  margin-bottom: 1rem;
+}
+
+section.yt input {
+  margin-right: 0;
+}
+
+section.yt label {
+  margin-left: -0.3rem;
+  font-size: .8rem;
+}
+
+input[type="url"] {
+  width: 100%;
+}
+
+#resolution {
+  width: 50%;
+}
+
+#audioWrapper {
+  display: inline;
+}
+
+#progressContainer span {
+  position: absolute;
+  top: .5rem;
+  display: inline-block;
+  color: #fff;
+  margin-left: 1rem;
+  text-align: right;
+}
+
+#progressContainer {
+  display: block;
+  position: relative;
+  width: 100%;
+}
+
+#progressBar {
+  height: 2rem;
+  width: 100%;
+}
+
+#progressLog {
+  border: 1px solid black;
+  min-height: 50px;
+  font-family: monospace;
+  font-size: .7rem;
+}
+
+#downloadLinkContainer {
+  display: none;
+  margin-bottom: 1rem;
+}

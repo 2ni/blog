@@ -21,6 +21,7 @@ const __dirname = dirname(__filename)
 import  config from  "./config/config.js"
 import * as handlebarsHelpers from "./helpers/handlebars.js"
 
+import ytRoutes from "./routes/yt.js"
 import articleRoutes from "./routes/articles.js"
 import pageRoutes from "./routes/pages.js"
 import attachmentRoutes from "./routes/attachments.js"
@@ -129,6 +130,7 @@ app.use(compression())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
+app.use("/yt", ytRoutes)
 app.use("/articles", articleRoutes)
 app.use("/pages", pageRoutes)
 app.use("/attachments", attachmentRoutes)
