@@ -67,11 +67,20 @@ const copyRecursiveSync = (src, dest) => {
     // replace filename within html file
     // we replace the ID which is defined as <filename>-ID
     // eg for public/css/default.css -> DEFAULT-ID
-    const targetFn = path.join("dist-new", "/views/layouts/default.hbs")
-    const data = fs.readFileSync(targetFn).toString()
-    const placeholder = "{{" + fn.match(/([^./]+).[^.]+$/)[1].toUpperCase() + "-ID}}"
-    console.log(targetAbs + ": " + placeholder + " -> " + id)
-    fs.writeFileSync(targetFn, data.replace(new RegExp(placeholder), "-" + id))
+    for (const t of [ "/views/layouts/default.hbs", "/views/yt/index.hbs" ]) {
+      const targetFn = path.join("dist-new", t)
+      const data = fs.readFileSync(targetFn).toString()
+      const placeholder = "{{" + fn.match(/([^./]+).[^.]+$/)[1].toUpperCase() + "-ID}}"
+      if (data.match(new RegExp(placeholder))) {
+        console.log("  " + targetFn)
+        fs.writeFileSync(targetFn, data.replace(new RegExp(placeholder), "-" + id))
+      }
+    }
+    fs.unlink(path.join("dist-new", fn), err => {
+      if (err) {
+        console.error(err)
+      }
+    })
   }
 
   // move current dir to dist-<date>

@@ -13,7 +13,7 @@ router.get("/health", (req, res) => {
 })
 
 router.get("/", authorize("admin"), (req, res) => {
-  res.render("yt/index", { "jsfile": "/js/yt.js" })
+  res.render("yt/index")
 })
 
 router.post("/download", authorize("admin"), upload.none(), (req, res) => {
