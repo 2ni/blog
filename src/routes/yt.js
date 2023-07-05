@@ -61,7 +61,7 @@ router.post("/download", authorize("admin"), upload.none(), (req, res) => {
 
   command.on("error", err => {
     console.error(err)
-    progressData.logs(err.toString())
+    progressData.logs.unshift(err.toString())
   })
 
   command.on("close", code => {
