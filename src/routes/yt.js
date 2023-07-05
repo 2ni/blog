@@ -41,13 +41,15 @@ router.post("/download", authorize("admin"), upload.none(), (req, res) => {
   const outputs = []
   command.stdout.on("data", data => {
     const output = data.toString().trim()
-    // console.log(output)
+    console.log(output)
     outputs.push(output); outputs.length > 5 && outputs.splice(0, outputs.length - 5)
     let progress
     if (output.includes("[download]") && output.includes(" ETA ")) {
       progress = (output.match(/(\d{1,3}(?:\.\d{1,2})?)%/)||[])[1] // match 100.0% or 100%
       progressData.percentComplete = progress || 0
-      const [_, size, eta ] = output.match(/~\s*([^\s]*).*ETA\s([^\s]*)/) || ["", "", ""]
+      // [download]  98.1% of ~  30.59MiB at  109.39KiB/s ETA 00:00 (frag 3/4)
+      // [download]  95.3% of   30.59MiB at    1.64MiB/s ETA 00:00
+      const [_, size, eta ] = output.match(/[^\d]*([^\s]*).*ETA\s([^\s]*)/) || ["", "", ""]
       progressData.eta = `${progress}% of ${size}. ETA ${eta}`
       // console.log(">>>", progressData.eta)
     }
