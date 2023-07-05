@@ -59,6 +59,11 @@ router.post("/download", authorize("admin"), upload.none(), (req, res) => {
     progressData.logs.unshift(data.toString())
   })
 
+  command.on("error", err => {
+    console.error(err)
+    progressData.logs(err.toString())
+  })
+
   command.on("close", code => {
     if (req.body.info) {
       return res.json({ "info": progressData.logs.reverse() })
