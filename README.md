@@ -14,6 +14,12 @@ mongosh
 
 ### Installation
 
+#### nginx
+Avoid timeouts!
+```
+proxy_read_timeout 600;
+```
+
 #### setup some folders
 ```
 mkdir attachments
