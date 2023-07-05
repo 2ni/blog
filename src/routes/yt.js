@@ -68,6 +68,7 @@ router.post("/download", authorize("admin"), upload.none(), (req, res) => {
   })
 
   command.on("close", code => {
+    console.log(">>>>> DONE")
     if (req.body.info) {
       return res.json({ "info": progressData.logs.reverse() })
     }
