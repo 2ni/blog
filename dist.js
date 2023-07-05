@@ -83,6 +83,9 @@ const copyRecursiveSync = (src, dest) => {
     })
   }
 
+  // create needed tmp dir
+  fs.mkdirSync(path.join("dist-new", "tmp"))
+
   // move current dir to dist-<date>
   // const seconds = String(Math.round(fs.lstatSync("./src").mtimeMs/1000%86400))
   const seconds = String(Math.round((new Date().getTime()/1000) % 86400))
