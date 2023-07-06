@@ -41,7 +41,7 @@ router.post("/download", authorize("admin"), upload.none(), (req, res) => {
   const outputs = []
   command.stdout.on("data", data => {
     const output = data.toString().trim()
-    console.log(output)
+    // console.log(output)
     outputs.push(output); outputs.length > 5 && outputs.splice(0, outputs.length - 5)
     let progress
     if (output.includes("[download]") && output.includes(" ETA ")) {
@@ -68,7 +68,7 @@ router.post("/download", authorize("admin"), upload.none(), (req, res) => {
   })
 
   command.on("close", code => {
-    console.log(">>>>> DONE")
+    // console.log(">>>>> DONE")
     if (req.body.info) {
       return res.json({ "info": progressData.logs.reverse() })
     }
