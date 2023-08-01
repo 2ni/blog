@@ -5,7 +5,8 @@ import fs from "fs"
 import { spawn } from "child_process"
 import multer from "multer"
 
-const tmpFolder = process.env.ENV === "prod" ? "../tmp/" : "tmp/"
+const tmpFolder = "../tmp/"
+// const tmpFolder = "tmp/" // for localhost
 const upload = multer({ dest: tmpFolder })
 let progressData = { percentComplete: 0, isComplete: false, eta: "", logs: [] } // TODO: object which is request or user specific
 
