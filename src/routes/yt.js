@@ -5,7 +5,7 @@ import fs from "fs"
 import { spawn } from "child_process"
 import multer from "multer"
 
-const tmpFolder = "../tmp/"
+const tmpFolder = process.env.ENV === "prod" ? "../tmp/" : "tmp/"
 const upload = multer({ dest: tmpFolder })
 let progressData = { percentComplete: 0, isComplete: false, eta: "", logs: [] } // TODO: object which is request or user specific
 
@@ -14,7 +14,12 @@ router.get("/health", (req, res) => {
 })
 
 router.get("/", authorize("admin"), (req, res) => {
-  res.render("yt/index")
+  // show existing files, eg in case download failed for some reasons
+  const files = []
+  fs.readdirSync(tmpFolder).forEach(file => {
+    files.push(file)
+  })
+  res.render("yt/index", { files: files })
 })
 
 router.post("/download", authorize("admin"), upload.none(), (req, res) => {
@@ -34,7 +39,7 @@ router.post("/download", authorize("admin"), upload.none(), (req, res) => {
   } else if (req.body.audio) {
     command = spawn("yt-dlp", [ "--newline", "--extract-audio", "--audio-format", "mp3", url ], { "cwd": tmpFolder })
   } else {
-    command = spawn("yt-dlp", [ "--newline", url, "-cf", `bv*[ext=mp4][width<=${resolution}]+ba/b` ], { "cwd": tmpFolder })
+    command = spawn("yt-dlp", [ "--newline", url, "-cf", `b[ext=mp4][width<=${resolution}]/bv[ext=mp4][width<=${resolution}]+ba/b[width<${resolution}]` ], { "cwd": tmpFolder })
   }
 
   // const command = spawn("echo", ['[Merger] Merging formats into "test.mkv'])
@@ -75,6 +80,7 @@ router.post("/download", authorize("admin"), upload.none(), (req, res) => {
 
     // console.log("close", outputs)
     // [Merger] Merging formats into "The Biggest Mistake Gardeners Make in May [AT1lJkA5K1s].mkv"
+    // [FixupM3u8] Fixing MPEG-TS in MP4 container of "À la Carte! – Freiheit geht durch den Magen [94652116].mp4"
     // [download] Destination: The Biggest Mistake Gardeners Make in May [AT1lJkA5K1s].f251.webm
     // [ExtractAudio] Destination: The Biggest Mistake Gardeners Make in May [AT1lJkA5K1s].mp3
     // [download] The Biggest Mistake Gardeners Make in May [AT1lJkA5K1s].mp3 has already been downloaded
@@ -85,7 +91,7 @@ router.post("/download", authorize("admin"), upload.none(), (req, res) => {
         filename = (line.match(/\[download\] (.*) has already been downloaded/) || [])[1]
       }
       if (!filename) {
-        filename = (line.match(/\[Merger\][^"]*"([^"]*)/) || [])[1]
+        filename = (line.match(/\[(?:Merger|FixupM3u8)\][^"]*"([^"]*)/) || [])[1]
       }
       if (!filename) {
         filename = (line.match(/\[download\][^:]* (.*)/) || [])[1]
@@ -124,7 +130,7 @@ router.get("/file/:filename", authorize("admin"), (req, res) => {
   res.setHeader("Cache-Control", "public, max-age=0") // to ensure we call the endpoint and delete the file
 
   const filename = req.params.filename
-  const filePath = `${tmpFolder}/${filename}`
+  const filePath = `${tmpFolder}${filename}`
 
   res.download(filePath, err => {
     if (err) {

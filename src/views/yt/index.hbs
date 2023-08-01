@@ -21,5 +21,12 @@
     <progress id="progressBar" value="0" max="100"></progress>
     <pre id="progressLog"></pre>
   </div>
+  <div class="files">
+    <ul>
+      {{#each files }}
+      <li><a href="/yt/file/{{ this }}">{{ this }}</a></li>
+      {{/each }}
+    </ul>
+  </div>
 </section>
 <script src="/js/yt{{YT-ID}}.js"></script>
