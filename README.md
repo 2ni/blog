@@ -1,3 +1,11 @@
+### start service
+```
+sudo systemctl [start|stop|restart|status] blog
+sudo systemctl [enable|disable] blog # to disable/enable  on boot
+sudo systemctl list-unit-files --type=service # to list if service starts on boot
+journalctl -u blog -f # to show log output
+```
+
 ### Deploy
 ```
 ssh mouette; cd blog
