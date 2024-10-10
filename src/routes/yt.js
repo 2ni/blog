@@ -87,15 +87,12 @@ router.post("/download", authorize("admin"), upload.none(), (req, res) => {
     // [download] The Biggest Mistake Gardeners Make in May [AT1lJkA5K1s].mp3 has already been downloaded
     let filename
     for (const line of outputs.reverse()) {
-      filename = (line.match(/Destination: (.*)/) || [])[1]
+      filename = line.match(/Destination: (.*)/)?.[1];
       if (!filename) {
-        filename = (line.match(/\[download\] (.*) has already been downloaded/) || [])[1]
+        filename = line.match(/\[download\] (.*) has already been downloaded/)?.[1];
       }
       if (!filename) {
-        filename = (line.match(/\[(?:Merger|FixupM3u8)\][^"]*"([^"]*)/) || [])[1]
-      }
-      if (!filename) {
-        filename = (line.match(/\[download\][^:]* (.*)/) || [])[1]
+        filename = line.match(/\[(?:Merger|FixupM3u8)\][^"]*"([^"]*)/)?.[1];
       }
 
       if (filename) {
