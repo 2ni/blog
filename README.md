@@ -21,6 +21,8 @@ mongosh
 ```
 
 ### Installation
+sudo cp blog.service /etc/systemd/system/
+sudo systemctl daemon-reload
 
 #### nginx
 Avoid timeouts!
@@ -43,7 +45,7 @@ The python virtualenv will be installed in the folder yt.
 yt/bin must be part of the environment path in the file blog.service
 
 ```
-pip3 install virtualenv
+sudo apt install python3-pip python3-virtualenv
 cd blog/
 virtualenv -p python3 yt
 yt/bin/pip install yt-dlp

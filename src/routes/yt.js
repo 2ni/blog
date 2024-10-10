@@ -36,11 +36,11 @@ router.post("/download", authorize("admin"), upload.none(), (req, res) => {
   // alias yt-dlp-audio='yt-dlp --extract-audio --audio-format mp3'
   let command
   if (req.body.info) {
-    command = spawn("yt-dlp", [ "-F", url ])
+    command = spawn("yt-dlp", [ "-F", "--no-cache-dir", url ])
   } else if (req.body.audio) {
-    command = spawn("yt-dlp", [ "--newline", "--extract-audio", "--audio-format", "mp3", url ], { "cwd": tmpFolder })
+    command = spawn("yt-dlp", [ "--newline", "--no-cache-dir", "--extract-audio", "--audio-format", "mp3", url ], { "cwd": tmpFolder })
   } else {
-    command = spawn("yt-dlp", [ "--newline", url, "-cf", `b[ext=mp4][width<=${resolution}]/bv[ext=mp4][width<=${resolution}]+ba/b[width<${resolution}]` ], { "cwd": tmpFolder })
+    command = spawn("yt-dlp", [ "--newline", "--no-cache-dir", url, "-cf", `b[ext=mp4][width<=${resolution}]/bv[ext=mp4][width<=${resolution}]+ba/b[width<${resolution}]` ], { "cwd": tmpFolder })
   }
 
   // const command = spawn("echo", ['[Merger] Merging formats into "test.mkv'])
@@ -48,7 +48,7 @@ router.post("/download", authorize("admin"), upload.none(), (req, res) => {
   command.stdout.on("data", data => {
     const output = data.toString().trim()
     // console.log(output)
-    outputs.push(output); outputs.length > 5 && outputs.splice(0, outputs.length - 5)
+    outputs.push(output); // Destination line is not at the bottom anymore. outputs.length > 5 && outputs.splice(0, outputs.length - 5)
     let progress
     if (output.includes("[download]") && output.includes(" ETA ")) {
       progress = (output.match(/(\d{1,3}(?:\.\d{1,2})?)%/)||[])[1] // match 100.0% or 100%
